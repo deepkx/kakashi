@@ -1,0 +1,174 @@
+#include<iostream>
+using namespace std;
+class Car
+{
+public:
+
+
+    int regNumber;
+    string carModel;
+
+
+    Car()
+    {
+        regNumber = 0;
+        carModel = "null";
+
+    }
+    Car(int c,string d)
+    {
+        regNumber = c;
+        carModel = d;
+    }
+
+};
+class Customer
+{
+private :
+    Car *car;
+
+public:
+    string customerName;
+    long int phNo;
+    Customer()
+    {
+
+
+    }
+
+    Customer(string a,long int b,Car *c)
+    {
+        customerName = a;
+        phNo = b;
+        car=c;
+
+    }
+    void displayCustomerInfo();
+    ~Customer()
+    {
+
+    }
+
+
+
+
+};
+void Customer::displayCustomerInfo()
+{
+    cout<<"name : "<<customerName<<endl;
+    cout<<"phone number : "<<phNo<<endl;
+    cout<<"regNumber : "<<car->regNumber<<endl;
+    cout<<"car model : "<<car->carModel<<endl;
+
+}
+class Slot
+{
+public :
+    int slotNumber;
+public:
+    Slot(){}
+
+};
+class Allotment
+{
+private:
+    //int allotmentNumber;
+
+    Slot *slot;
+public:
+    Allotment(){}
+        void getAllotment()
+    {
+        cout<<"enter slot number "<<endl;
+        cin>>slot->slotNumber;
+
+    }
+
+   /* void getAllotment(slot *s)
+    {
+        allotmentNumber =
+    }*/
+
+};
+class Time
+{
+private :
+    int hourIn;
+    int minuteIn;
+    int hourOut;
+    int minuteOut;
+public :
+    Time(){}
+    void inTime();
+    void outTime();
+
+
+};
+void Time::inTime()
+{
+    cout<<"enter hour"<<endl;
+    cin>>hourIn;
+    cout<<"enter minutes"<<endl;
+    cin>>minuteIn;
+}
+void Time::outTime()
+{
+    cout<<"enter hour"<<endl;
+    cin>>hourOut;
+    cout<<"enter minutes"<<endl;
+    cin>>minuteOut;
+}
+class Payment
+{
+private:
+    Time *time;
+    int charge;
+    int total;
+    
+public:
+    Payment(){}
+    int operator - (Time);
+    Payment (int c)
+    {
+        charge = c;
+    }
+
+    void paymentAmount();
+
+};
+int Payment::operator - (Time t)
+{
+    Time t3;
+    t3.Time->minute=Time->minuteOut-t.Time->minuteIn;
+    t3.Time->hour=Time->hourOut-t.Time->hourIN
+    t3.Time->hour=60*t3.Time->hour;
+    total=t3.Time->hour+t3.Time->minute;
+    return total;
+}
+void Payment::paymentAmount()
+{
+    cash = total*charge;
+    cout<<"total charge"<<cash<<endl;
+}
+int main()
+{
+    Car c(1234 , "alto");
+    Customer customer("abc",1234567891,&c);
+    customer.displayCustomerInfo();
+    Allotment a;
+    a.getAllotment();
+    Time t;
+    t.inTime();
+    t.outTime();
+    Payment p,p1;
+    p = p1.operator - (Time t)
+    p.payment(2);
+    p.paymentAmount();
+
+
+
+
+
+}
+
+
