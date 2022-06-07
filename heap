@@ -1,0 +1,123 @@
+#include <stdio.h>
+int size = 0;
+
+void swap(int *a, int *b)
+{
+    int temp = *b;
+    *b = *a;
+    *a = temp;
+}
+
+void heapify(int array[], int size, int i)
+{
+    if (size == 1)
+    {
+        printf("Single element in the heap");
+    }
+    else
+    {
+        int largest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        if (l < size && array[l] > array[largest])
+            largest = l;
+        if (r < size && array[r] > array[largest])
+            largest = r;
+        if (largest != i)
+        {
+            swap(&array[i], &array[largest]);
+            heapify(array, size, largest);
+        }
+    }
+}
+
+void insert(int array[], int newNum)
+{
+    if (size == 0)
+    {
+        array[0] = newNum;
+        size += 1;
+    }
+    else
+    {
+        array[size] = newNum;
+        size += 1;
+
+        for (int i = size / 2 - 1; i >= 0; i--)
+        {
+            heapify(array, size, i);
+        }
+    }
+}
+
+void deleteRoot(int array[], int num)
+{
+    int i;
+
+    for (i = 0; i < size; i++)
+    {
+        if (num == array[i])
+            break;
+    }
+
+    swap(&array[i], &array[size - 1]);
+    size -= 1;
+
+    for (int i = size / 2 - 1; i >= 0; i--)
+    {
+        heapify(array, size, i);
+    }
+}
+
+void printArray(int array[], int size)
+{
+    for (int i = 0; i < size; ++i)
+        printf("%d ", array[i]);
+    printf("\n");
+}
+
+int main()
+{
+    int array[10],i,n;
+    int ans,data,delnum,choice;
+
+    do
+    {
+        printf("\n\n1 >>> INSERT\n");
+        printf("2 >>> DELETE\n");
+        printf("3 >>> DISPLAY\n");
+        printf("4 >>> EXIT\n");
+
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+
+        switch(choice)
+        {
+        case 1:
+            printf("No of elements ? ");
+            scanf("%d",&n);
+            for(i=1;i<=n;i++)
+            {
+                printf("Enter the data: ");
+                scanf("%d",&data);
+                insert(array,data);
+            }
+            break;
+        case 2:
+            printf("Enter the number to be deleted: ");
+            scanf("%d",&delnum);
+            deleteRoot(array, delnum);
+            printf("%d deleted",delnum);
+            break;
+        case 3:
+            printArray(array, size);
+            break;
+        }
+
+        printf("want to continue ? (1/0)  ");
+        scanf("%d",&ans);
+
+    }while(ans!=0);
+
+  return 0;
+}
