@@ -1,0 +1,99 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+
+using namespace std;
+
+class Mark
+{
+public:
+
+    float mark;
+
+public:
+    Mark()
+    {
+        mark = 0;
+    }
+    Mark(float c)
+    {
+        mark=c;
+    }
+
+
+};
+class Student
+{
+protected:
+
+    Mark m;
+
+    string name;
+    string rollNo;
+
+public:
+    Student()
+    {
+        name = "NULL";
+        rollNo = "NULL";
+
+
+    }
+    Student(string a,string b,Mark mark):m(mark)
+    {
+        name = a;
+        rollNo = b;
+    }
+    void display()
+    {
+        cout<<name<<" "<<m.mark<<" "<<rollNo;
+    }
+    friend istream &operator <<(istream &obj,Mark &m)
+    {
+        obj>>m.mark>>name>>rollno;
+    }
+    friend ostream &operator <<(ostream &obj,Mark &m)
+    {
+        obj<<m.mark<<name<<rollno;
+    }
+};
+
+int main()
+{
+    Student stu("Hitesh","21",100);
+    stu.display();
+    int main()
+
+    Student S1[5],T1;
+    int j;
+    for ( j = 0;j<5;j++)
+    {
+        ofstream myfile("student.txt",ios::app);
+        cin>>S1[j];
+        myfile<<"\n"<<"NAME OF THE STUDENT"<<S1[j].Name<<"\n"<<"ROLL NUMBER OF THE STUDENT"<<S1[j].Roll_num<<endl;
+        for(int i=0;i<5;i++)
+        {
+            myfile<<i+1<<" MARK OF THE STUDENT"<<S1[j].marks[i]<<"\n";
+        }
+        myfile<<"total mark of student is"<<S1[j].total<<endl;
+        myfile<<"average of the student is "<<(S1[j].total)/5<<endl;
+        classTot+=S1[j].total/5;
+        myfile.close();
+
+    }
+    ofstream myfile("student.txt",ios::app);
+    myfile<<"average of the class is : "<<classTot<<endl;
+
+
+
+
+    for(j=0;j<5;j++)
+    {
+        cout<<S1[j];
+    }
+    cout<<"average of the class is : "<<classTot<<endl;
+
+
+
+
+}
