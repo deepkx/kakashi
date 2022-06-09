@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+    int a[8];
+    int b[8];
+    int i=0,x,j,temp,k;
+    for(k=0;k<8;k++)
+    {
+        cout<<"enter :";
+        cin>>a[k];
+    }
+    while(i<8)
+    {
+        x=a[i];
+        b[i]=x;
+        j=i;
+        while(j>0)
+        {
+            if(b[j]>b[(j-1)/2])
+            {
+                temp=b[j];
+                b[j]=b[(j-1)/2];
+                b[(j-1)/2]=temp;
+            }
+            j=(j-1)/2;
+        }
+        i=i+1;
+    }
+    for(i=0;i<8;i++)
+    {
+        cout<<b[i]<<endl;
+    }
+}
