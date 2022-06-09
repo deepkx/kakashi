@@ -1,0 +1,102 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+class Student
+{
+    private:
+        int rno;
+        string name;
+        float marks;
+    public:
+        Student(){rno=0;name="";marks=0;}
+        Student(int a,string b,float c){rno=a;name=b;marks=c;}
+        void set_student(int a,string b,float c){rno=a;name=b;marks=c;}
+        void display(){cout<<"\nRoll no: "<<rno<<"\nName   : "<<name<<"\nMarks  : "<<marks<<endl;}
+        int rn(){return rno;}
+        string nam(){return name;}
+        float mar(){return marks;}
+};
+
+class Class
+{
+    private:
+        Student *s;
+        int n;
+    public:
+        Class(){n=0;}
+        void set_class();
+        void set_c_student();
+        void display();
+        void calc_avg();
+};
+
+void Class::set_c_student()
+{
+    int r;
+    string na;
+    float m;
+    cout<<"\nEnter the number of students: ";
+    cin>>n;
+    s=new Student [n];
+    cout<<"\nEnter the student records: "<<endl;
+    for(int i=0;i<n;i++)
+    {
+        cout<<"\nEnter the records of student "<<i+1<<endl;
+        cout<<"Enter the roll no: ";
+        cin>>r;
+        cout<<"Enter the name   : ";
+        cin.ignore();
+        getline(cin,na);
+        cout<<"Enter the mark   : ";
+        cin>>m;
+        s[i].set_student(r,na,m);
+    }
+}
+
+void Class::display()
+{
+    for(int i=0;i<n;i++)
+    {
+        cout<<endl<<"\nRecord of "<<i+1<<" student: ";
+        s[i].display();
+    }
+}
+
+void Class::set_class()
+{
+    int i=1;
+    string line;
+    Student S;
+    float avg=0;
+    ofstream write("Records.txt");
+    for(i=0;i<n;i++)
+    {
+        write.write((const char*)&s[i],sizeof(S));
+    }
+    write.close();
+ }
+
+void Class::calc_avg()
+{
+    ifstream read("Records.txt");
+    int i=0,avg=0;
+    while(!read.eof())
+    {
+        read.read((char *)(&s[i]),sizeof(s[i]));
+        avg+=s[i++].mar();
+    }
+    avg=avg/n;
+    cout<<"\nClass Average: "<<avg;
+    read.close();
+}
+
+int main()
+{
+    Class c;
+    c.set_c_student();
+    c.set_class();
+    c.calc_avg();
+    c.display();
+    return 0;
+}
