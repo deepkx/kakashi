@@ -1,0 +1,411 @@
+#include<iostream>
+#include<stdlib.h>
+#include<queue>
+
+using namespace std;
+
+struct Node
+{
+  int data;
+  struct Node *left;
+  struct Node *right;
+};
+
+class AVL
+{
+  struct Node* root;
+  public:
+     AVL()
+     {
+       root = NULL;
+     }
+     Node* create(int data);
+     Node* Insert(struct Node* &root,int data);
+     int balance_factor(struct Node *root);
+     int height(struct Node* root);
+     void levelOrder(struct Node* root);
+     Node* deletion(struct Node* root,int elt);
+     Node* balance(struct Node* root);
+     Node* ll(struct Node* root);
+     Node* rr(struct Node* root);
+     Node* lr(struct Node* root);
+     Node* rl(struct Node* root);
+     Node* minValue(struct Node* root);
+     Node* del_minValue(struct Node* root);
+     void  del_lchild(struct Node*root);
+     void  Search(struct Node *root,int elt);
+     void  displayInorder(struct Node *root);
+     int getLeafNode(struct Node *root);
+};
+
+Node* AVL :: create(int data)
+{
+   struct Node* n = new Node;
+   n->left=n->right = NULL;
+   n->data = data;
+   return n;
+}
+
+Node *AVL :: Insert(struct Node* &root,int data)
+{
+  if(root == NULL)
+  {
+     root = create(data);
+    // levelOrder(root);
+     return root;
+  }
+  else if(root->data < data)
+  {
+     Insert(root->right,data);
+     root = balance(root);
+  }
+  else
+  {
+    Insert(root->left,data);
+    root = balance(root);
+
+  }
+
+  levelOrder(root);
+  return root;
+}
+
+int AVL :: height(struct Node* root)
+{
+   int h = 0;
+   if (root != NULL)
+   {
+      int l_height = height(root->left);
+      int r_height = height(root->right);
+      int max_height = max(l_height, r_height);
+      h = max_height + 1;
+   }
+  return h;
+}
+
+int AVL :: balance_factor(struct Node *root)
+{
+  return (height(root->left) - height(root->right));
+}
+
+
+Node* AVL :: ll(struct Node *root)
+{
+  struct Node *k = root->left;
+  root->left = k->right;
+  k->right = root;
+  cout<<"LL ROTATION"<<endl;
+  return k;
+}
+
+Node* AVL :: rr(struct Node *root)
+{
+  struct Node *k = root->right;
+  root->right = k->left;
+  k->left = root;
+  cout<<"RR ROTATION"<<endl;
+  return k;
+
+}
+
+Node* AVL :: lr(struct Node *root)
+{
+  root->left = rr(root->left);
+  struct Node *k = ll(root);
+  cout<<"LR ROTATION"<<endl;
+  return k;
+}
+
+Node* AVL :: rl(struct Node *root)
+{
+  root->right = ll(root->right);
+  struct Node *k = rr(root);
+  cout<<"RL ROTATION"<<endl;
+  return k;
+
+}
+
+Node* AVL :: balance(struct Node* root)
+{
+   if(balance_factor(root) > 1)
+        {
+                if(balance_factor(root->left) > 0)
+                        root = ll(root);
+                else
+                        root = lr(root);
+        }
+   else if(balance_factor(root) < -1)
+        {
+                if(balance_factor(root->right) > 0)
+                        root = rl(root);
+                else
+                        root = rr(root);
+        }
+
+   return root;
+}
+
+void AVL::levelOrder(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return ;
+    }
+    struct Node* curr;
+    queue <Node*> q;
+    q.push(root);
+    while(!q.empty())
+    {
+        curr = q.front();
+        q.pop();
+        cout<<curr->data<<" ";
+        if(curr->left != NULL)
+        {
+            q.push(curr->left);
+        }
+        if(curr->right != NULL)
+        {
+            q.push(curr->right);
+        }
+    }
+        cout<<"\n";
+}
+
+
+void AVL::displayInorder(struct Node *root)
+{
+    if(root != NULL)
+    {
+        displayInorder(root->left);
+        cout<<root->data<<"-->";
+        displayInorder(root->right);
+    }
+}
+
+
+Node* AVL ::  deletion(struct Node* root,int elt)
+{
+    if(root == NULL)
+    {
+       return root;
+    }
+    if(root->data>elt)
+    {
+       root->left = deletion(root->left,elt);
+    }
+    else if(root->data<elt)
+    {
+      root->right = deletion(root->right,elt);
+    }
+    else
+    {
+      if(root->left==NULL && root->right==NULL)
+      {
+         return NULL;
+      }
+      else if(root->left == NULL)
+      {
+        struct Node* temp = root->right;
+        delete (root);
+        return temp;
+      }
+      else if(root->right == NULL)
+      {
+       struct Node* temp = root->left;
+       delete(root);
+       return temp;
+      }
+      struct Node* temp = minValue(root->right);
+      root->data = temp->data;
+      root->right = deletion(root->right,temp->data);
+   }
+   if(root == NULL)
+   {
+       return root;
+   }
+   else
+   {
+       root = balance(root);
+   }
+   return root;
+}
+
+Node* AVL :: minValue(Node* root)
+{
+    struct Node* curr = root;
+    while(curr->left != NULL)
+    {
+        curr = curr->left;
+    }
+    return curr;
+}
+
+Node* AVL :: del_minValue(Node* root)
+{
+    struct Node* curr = root;
+    while(curr->left != NULL)
+    {
+        curr = curr->left;
+    }
+    deletion(root,curr->data);
+}
+
+void AVL :: del_lchild(Node*root)
+{
+   struct Node* ptr = root;
+   int flag;
+   while(ptr!=NULL)
+   {
+      if(ptr->left!=NULL && ptr->right == NULL)
+      {
+         deletion(root,ptr->data);
+         flag = 1;
+         break;
+      }
+      else
+      {
+        ptr = ptr->left;
+      }
+   }
+    if(flag!=1)
+    {
+         while(ptr!=NULL)
+         {
+               if(ptr->left!=NULL && ptr->right == NULL)
+                {
+                   deletion(root,ptr->data);
+                   flag = 2;
+                    break;
+                }
+               else
+                {
+                  ptr = ptr->right;
+                                  }
+        }
+    }
+    if(flag!=1 && flag!=2)
+    {
+       cout<<"THERE IS NO NODE WITH ONLY LEFT CHILD"<<endl;
+    }
+}
+
+
+int AVL::getLeafNode(struct Node *root)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+    if(root->left == NULL && root->right == NULL)
+    {
+
+        return 1;
+    }
+    else
+    {
+        return getLeafNode(root->left) + getLeafNode(root->right);
+    }
+}
+
+void AVL :: Search(struct Node* root,int elt)
+{
+        struct Node* ptr = root;
+        int flag;
+        while(ptr!=NULL)
+        {
+          if(ptr->data == elt)
+            {
+                flag = 1 ;
+                cout<<"ELEMENT FOUND"<<endl;
+                break;
+            }
+         else if(ptr->data < elt)
+                ptr = ptr->right;
+         else if(ptr->data > elt)
+                ptr = ptr->left;
+        }
+
+        if(flag != 1)
+          cout<<"ELEMENT NOT FOUND"<<endl;
+}
+int main()
+{
+  AVL a;
+  struct Node *root = NULL;
+  int choice,data,i,n,elt;
+  while(1)
+  {
+     cout<<"1.INSERT"<<endl;
+     cout<<"2.HEIGHT OF THE AVL TREE"<<endl;
+     cout<<"3.BALANCE FACTOR OF AVL TREE"<<endl;
+     cout<<"4.LEVEL ORDER TRAVERSAL"<<endl;
+     cout<<"5.DELETION"<<endl;
+     cout<<"6.DELETE NODE WITH MINIMUM VALUE"<<endl;
+     cout<<"7.DELETE NODE WITH ONLY LEFT CHILD"<<endl;
+     cout<<"8.DELETE ROOT NODE"<<endl;
+     cout<<"9.SEARCH FOR AN ELEMENT"<<endl;
+     cout<<"10.DISPLAY INORDER"<<endl;
+     cout<<"11.NUMBER OF LEAF NODES"<<endl;
+     cout<<"Enter your choice:"<<endl;
+     cin>>choice;
+     switch(choice)
+     {
+
+
+     case 1:
+           cout<<"Enter the number of elements to be inserted:"<<endl;
+           cin>>n;
+           for(i=0;i<n;i++)
+           {
+              cout<<"Enter the data:"<<endl;
+              cin>>data;
+              a.Insert(root,data);
+              cout<<" INSERTED!!!!!!"<<endl;
+           }
+           break;
+      case 2:
+          cout<<a.height(root);
+          break;
+      case 3:
+           cout<<a.balance_factor(root);
+           break;
+      case 4:
+           a.levelOrder(root);
+           break;
+      case 5:
+             cout<<"Enter the number of elements to be deleted:"<<endl;
+             cin>>n;
+             for(i=0;i<n;i++)
+             {
+               cout<<"Enter the element to be deleted:"<<endl;
+               cin>>elt;
+               a.deletion(root,elt);
+             }
+           break;
+      case 6:
+            a.del_minValue(root);
+            break;
+      case 7:
+            a.del_lchild(root);
+            break;
+      case 8:
+            a.deletion(root,root->data);
+            break;
+      case 9:
+           cout<<"Enter the element you want to search for:"<<endl;
+           cin>>elt;
+           a.Search(root,elt);
+           break;
+      case 10:
+           cout<<"The elements inorder traversal is:"<<endl;
+           a.displayInorder(root);
+           cout<<endl;
+           break;
+      case 11:
+          cout<<"THE LEAF NODES OF THE TREE IS:"<< a.getLeafNode(root)<<endl;
+          break;
+      default:
+          exit(0);
+     }
+     }
+   }
