@@ -1,0 +1,42 @@
+org 100h
+
+
+
+include emu8086.inc
+
+ 
+text1 db 'hello'
+
+text2 db 5(?)
+
+count dw 13
+
+mov ax , @data
+
+mov ds,ax
+mov es,ax
+mov cx,count
+mov si,0
+mov di,0
+
+add di,count
+
+dec di
+
+
+again:
+        mov al,text1[si]
+        mov text2[di],al
+        inc si
+        dec di
+        loop again
+        mov bx,0
+        cmp bx,cx
+        je endif
+        
+endif:
+
+ 
+
+
+ret
