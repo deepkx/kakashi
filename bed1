@@ -1,0 +1,45 @@
+mov dx,100
+mov di,2000h
+mov ax,0
+mov bx,0
+print 'string-'
+call get_string
+loop1:
+    cmp [di],'$'
+    je else
+    inc di
+    jmp loop1
+else:
+    print 'string2-'
+    call get_string
+    mov si,2000h  
+   
+loop2:
+    cmp [si],'#'
+    je end
+    cmp [si],'n'
+    je else2
+    inc si
+    inc bx
+    loop loop2
+else2:
+    inc si
+    inc ax
+    inc bx
+    loop loop2
+end:
+    print 'no. of n:'
+    call print_num
+    mov ax,bx
+    printn
+    print 'length:'
+    call print_num
+       
+   
+   
+               
+define_get_string
+define_print_num
+define_print_num_uns
+define_print_string              
+ret
