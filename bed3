@@ -1,0 +1,5 @@
+mov si,1000h
+mov di,2000h
+cld
+mov cx,0003h
+repe cmsw
