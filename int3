@@ -1,0 +1,67 @@
+include 'emu8086.inc'
+
+org 100h
+
+mov dh, 0
+mov dl, 0
+
+menu:
+mov ah, 00h
+int 16h
+cmp ah, 48h
+je up
+
+cmp ah, 50h
+je down
+
+cmp ah, 4Dh
+je right
+
+cmp ah, 4Bh
+je left
+
+jmp exit
+
+up:
+mov ah, 3
+int 10h
+
+mov ah, 2 ;Move cursor Up
+sub dh, 1 ;dh is row(row is -1 now,so moves up)
+int 10h
+
+jmp menu
+
+down:
+mov ah, 3
+int 10h
+
+mov ah, 2 ;Move cursor Down
+add dh, 1 ;(row is 1 now,so moves down)
+int 10h
+
+jmp menu
+
+right:
+mov ah, 3
+int 10h
+
+mov ah, 2 ;Move cursor Right
+add dl, 1 ;dl is column(column is 1 now,so moves right)
+int 10h
+
+jmp menu
+
+left:
+mov ah, 3
+int 10h
+
+mov ah, 2 ;Move cursor Left
+sub dl, 1 ;(column is -1 now,so moves left)
+int 10h
+
+jmp menu
+
+exit:
+
+ret
