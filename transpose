@@ -1,0 +1,50 @@
+mov bx,1000h
+print 'enter the string:'
+mov ax,0
+start:  
+    printn
+    call scan_num
+    mov [bx],cx
+    inc bx
+    inc ax
+    cmp ax,16
+    je end
+    jmp start
+end:
+mov si,1000h
+mov bp,2000h
+mov cx,0
+mov bx,0
+mov dx,0h
+call TRANSPOSE
+printn
+
+ret
+define_scan_num
+
+
+TRANSPOSE PROC
+step1:
+cmp dx,16
+je end1
+     mov ax,[si+bx]
+     mov [bp],ax
+     inc bp
+     add bx,4
+     inc cx
+     inc dx
+     cmp cx,4
+     je step2:
+     jmp step1
+
+step2:
+cmp dx,15
+je end1
+    mov bx,0
+    mov cx,0
+    inc si
+    jmp step1
+   
+end1:
+    ret
+TRANSPOSE ENDP
