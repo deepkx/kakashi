@@ -1,0 +1,103 @@
+;16H For keystroke bios and ascii values
+-----------
+;include 'emu8086.inc'
+;org 100h
+;
+;MOV ah,00h
+;int 16h
+;cmp ah,48h
+;je code
+;jmp exit
+;
+;exit:
+;  print 'Exit'
+;  ret    
+;code:
+;  print 'KEY PRESSED'    
+;  
+;
+;ret
+---------
+;include 'emu8086.inc'
+;org 100h
+;
+;mov ah,01h
+;int 16h
+;cmp ah,48h
+;jz code
+;jmp exit
+;
+;code:
+;  print 'KEY PRESSED'
+;exit:
+;  print 'Exit'
+;  
+;int 20h
+;ret    
+-------------------
+;gets a character and echo it on the screen
+
+;mov cx,10
+;loo:
+;mov ah,1
+;int 21h
+;loop loo
+;
+;mov ah,2
+;mov dl,'h'
+;int 21h  
+
+------------------------------
+;password verifying without echo  
+
+;include 'emu8086.inc'
+;org 100h
+;mov ah, 7
+;int 21h    
+;cmp al,'k'
+;jne  exit
+;
+;mov ah, 7
+;int 21h    
+;cmp al,'e'
+;jne exit
+;
+;mov ah, 7
+;int 21h    
+;cmp al,'e'
+;jne exit
+;je crt    
+;
+;exit:
+;print 'exit'
+;ret
+;
+;crt:
+;print 'crt'
+
+
+---------------------------
+;TO PRINT A STRING
+     
+;mov dx,offset message  
+;mov ah,09h
+;int 21h  
+;message db 'keertiniii','$'
+
+
+-------------------------------------
+;TO INPUT A WHOLE STRING AND ECHO IT
+;org 100h
+;mov dx, offset buffer
+;mov ah, 0ah
+;int 21h
+;jmp print
+;buffer db 20,?,20 dup(' ')
+;print:
+;xor bx, bx
+;mov bl, buffer[1]
+;mov buffer[bx+2], '$'
+;mov dx, offset buffer + 2
+;mov ah, 9
+;int 21h
+;ret
