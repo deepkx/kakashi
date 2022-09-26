@@ -1,0 +1,54 @@
+mov dh, 6
+mov dl, 20
+mov bh, 0
+mov ah, 2
+int 10h  
+
+mov ah,09h
+mov al,45
+mov bh,0
+mov bl,3h
+mov cx,40
+int 10h
+
+
+mov dh, 20
+mov dl, 20
+mov bh, 0
+mov ah, 2
+int 10h  
+
+mov ah,09h
+mov al,45
+mov bh,0
+mov bl,3h
+mov cx,40
+int 10h
+
+mov dh, 7
+mov dl, 20
+mov bh, 0
+mov ah, 2
+int 10h  
+
+mov ah,09h
+mov al,179
+mov bh,0
+mov bl,3h
+mov cx,1
+int 10h
+
+mov dh,7
+mov dl, 59
+mov bh, 0
+mov ah, 2
+int 10h  
+
+mov ah,09h
+mov al,179
+mov bh,0
+mov bl,3h
+mov cx,1
+int 10h
+
+ret
