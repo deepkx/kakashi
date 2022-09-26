@@ -1,0 +1,27 @@
+org 100h
+include emu8086.inc
+
+mov dx, 0
+print &#39;Enter the number:&#39;
+call scan_num
+mov bx, cx
+mov ax, bx
+dec bx
+
+start:
+cmp bx,0
+je end
+mul bx
+dec bx
+jmp start
+
+end:
+printn
+print &#39;The factorial is: &#39;
+call print_num
+
+sum db ?
+ret
+define_scan_num
+define_print_num
+define_print_num_uns
