@@ -1,0 +1,77 @@
+LENGTH OF A STRING
+include &#39;emu8086.inc&#39;
+org 100h      
+mov dx,100
+mov di,4000
+print &#39;enter the string&#39;
+call get_string
+mov ax,0
+loop_start:
+    cmp [di],&#39;$&#39;
+    je case1
+    inc di
+    inc ax
+    jmp loop_start
+case1: 
+    print &#39;length of the string is&#39;
+    call print_num  
+
+ret
+DEFINE_get_string
+DEFINE_PRINT_STRING
+DEFINE_PRINT_NUM
+DEFINE_PRINT_NUM_UNS  
+DEFINE_PTHIS
+---------------------------
+CONCATENATION
+org 100h
+include &#39;emu8086.inc&#39;
+print &#39;enter the string: &#39;
+mov dx, 100;
+mov di, 1000h;            
+call GET_STRING;  
+MOV CX, 0;
+MOV DI, 1000H;
+START:
+   CMP [DI], &#39;$&#39;;
+   JE CONCAT;
+   INC DI;
+   JMP START;
+CONCAT:
+    print &#39;enter the next string: &#39;
+
+    call GET_STRING;
+mov si, 1000h;
+PRINT &#39;THE NUMBER OF CHARACTERS:&#39;
+CALL PRINT_STRING;
+DEFINE_PRINT_NUM;  
+DEFINE_PRINT_NUM_UNS;
+DEFINE_GET_STRING;
+DEFINE_PRINT_STRING
+--------------------------------
+REVERSE
+.model small
+.data
+string8 db &#39;CODING&#39;
+.code
+main proc
+mov dx,100h
+mov di,1000h
+print &#39;Enter the first string&#39;
+call get_string
+printn
+mov [si],offset string8
+occurence:
+  cmp [di],$
+  je end_loop
+  cmp [di],[si]
+  je nxt_chk
+  inc di
+  jmp occurence
+nxt_chk:
+  inc si
+  inc di
+  jmp occurence
+ 
+end_loop
+main endp
