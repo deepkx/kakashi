@@ -1,0 +1,47 @@
+org 100h
+
+mov ah,00h
+int 16h
+cmp ah,13h
+je case1
+cmp ah,30h
+je case2
+cmp ah,22h
+je case3
+
+jmp else
+
+case1: mov al, 13h
+mov ah, 0
+int 10h ; set graphics video mode.
+mov al, 1100b
+mov cx, 10
+mov dx, 20
+mov ah, 0ch
+int 10h
+
+jmp else
+
+case2: mov al, 13h
+mov ah, 0
+int 10h ; set graphics video mode.
+mov al, 1001b
+mov cx, 10
+mov dx, 20
+mov ah, 0ch
+int 10h
+
+jmp else
+
+case3: mov al, 13h
+mov ah, 0
+int 10h ; set graphics video mode.
+mov al, 1010b
+mov cx, 10
+mov dx, 20
+mov ah, 0ch
+int 10h
+
+jmp else
+
+else: ret
