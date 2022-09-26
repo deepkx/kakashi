@@ -1,0 +1,12 @@
+org 100h
+
+call:
+
+MOV AH,0H
+INT 16H
+print 'key'
+printn
+
+jmp call
+
+Ret
