@@ -1,0 +1,20 @@
+include 'emu8086.inc'
+org 100h
+mov ah,09h
+lea dx,msg1
+
+
+int 21h  
+mov ax,2
+mov bx,3
+add ax,bx
+call print_num
+mov ah,00h
+int 21h
+
+msg1 db 'The sum of the given numbers is:$'
+define_print_num
+define_print_num_uns
+
+
+ret   
