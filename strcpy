@@ -1,0 +1,35 @@
+include &#39;emu8086.inc&#39;
+org 100h
+mov DI,1000h
+mov dx,10
+MOV BX,1
+print &#39;Enter a string:&#39;
+
+call get_string
+printn
+print &#39;Enter the length of substring = &#39;
+
+CALL SCAN_NUM
+sub cx,1
+MOV SI,1000h
+mov DI,2000H
+call substr
+MOV SI,2000H
+PRINTN
+CALL PRINT_STRING
+ret
+define_print_string
+define_get_string
+DEFINE_SCAN_NUM
+DEFINE_PRINT_NUM
+DEFINE_PRINT_NUM_UNS
+substr proc
+START:
+
+MOV AX,[SI]
+MOV [DI],AX
+INC DI
+INC SI
+LOOP start
+RET
+ENDP
