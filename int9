@@ -1,0 +1,37 @@
+mov ax,55h
+mov bx,2h
+mov si,1000
+
+call:
+   
+    cmp ax,1h
+    je endloop1
+   
+    div bx
+   
+    mov [si],dx
+    dec si
+   
+    jmp call
+   
+   
+   
+endloop1:
+       
+        dec si
+        mov [si],dx
+        jmp endloop2
+       
+       
+endloop2:
+       
+        mov ax,[si]
+        inc si
+        call print_num
+        jmp endloop2
+       
+       
+define_print_num
+define_scan_num
+define_print_num_uns
+ret
