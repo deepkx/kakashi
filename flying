@@ -1,0 +1,33 @@
+org 100h
+.model small
+.stack 100
+.data
+.code
+main proc 
+    mov ax,@data
+    mov ds,ax
+    mov es,ax
+start:  mov ah,7
+        int 21h
+        cmp al,'r'
+        je case1:
+        cmp al,'g'
+        je case2:
+        cmp al,'b'
+        je case3: 
+        jmp exit:
+case1: mov ah,2
+       mov dl,'@'
+       int 21h
+       jmp start:
+case2: mov ah,2
+       mov dl,'*'
+       int 21h
+       jmp start:
+case3: mov ah,2
+       mov dl,'$'
+       int 21h
+       jmp start:
+exit:
+main endp
+ret
