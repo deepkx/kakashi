@@ -1,0 +1,166 @@
+mov ah,02h
+mov dh,6
+mov dl,21
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,40
+int 10h
+        
+startloop:
+    mov ah,02h
+    add dh,1
+    cmp dh,18
+    jg exit:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp startloop     
+
+
+exit:
+mov ah,02h
+mov dh,19
+mov dl,21
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,40
+int 10h 
+
+mov dl,60
+mov dh,6
+
+start:
+    mov ah,02h
+    add dh,1
+    cmp dh,18
+    jg exit1:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp start 
+    
+    
+    
+    
+    
+    
+    
+exit1:
+mov ah,02h
+mov dh,8
+mov dl,25
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,30
+int 10h
+
+mov dh,8
+        
+startloop1:
+    mov ah,02h
+    add dh,1
+    cmp dh,15
+    jg exit2:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp startloop1     
+
+
+exit2:
+mov ah,02h
+mov dh,16
+mov dl,25
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,30
+int 10h 
+
+mov dl,54
+mov dh,8
+
+start1:
+    mov ah,02h
+    add dh,1
+    cmp dh,15
+    jg exit3:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp start1
+    
+    
+    
+    
+    
+exit3:
+mov ah,02h
+mov dh,3
+mov dl,18
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,48
+int 10h
+
+mov dh,3
+        
+startloop2:
+    mov ah,02h
+    add dh,1
+    cmp dh,21
+    jg exit4:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp startloop2     
+
+
+exit4:
+mov ah,02h
+mov dh,21
+mov dl,19
+mov bh,0
+int 10h 
+
+mov ah,0ah
+mov al,'*'
+mov cx,47
+int 10h 
+
+mov dl,65
+mov dh,2
+
+start3:
+    mov ah,02h
+    add dh,1
+    cmp dh,21
+    jg exit5:
+    int 10h   
+    mov ah,0ah
+    mov cx,1
+    int 10h
+    jmp start3
+    
+exit5:                
+
+ret
