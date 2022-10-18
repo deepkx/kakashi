@@ -1,0 +1,81 @@
+include 'emu8086.inc'
+
+org 100h
+
+mov DI,1000h
+
+mov dx,10
+
+MOV BX,1
+
+print 'Enter a string:'
+
+call get_string
+
+printn
+
+print 'Enter the starting index :'
+
+call scan_num
+
+mov ax,cx
+
+printn
+
+print 'Enter the length of substring = '
+
+CALL SCAN_NUM
+
+MOV SI,1000h
+
+mov DI,2000H
+
+call substr
+
+MOV SI,2000H
+
+PRINTN
+
+CALL PRINT_STRING
+
+ret
+
+define_print_string
+
+define_get_string  
+
+DEFINE_SCAN_NUM
+
+DEFINE_PRINT_NUM
+
+DEFINE_PRINT_NUM_UNS
+
+substr proc
+
+    START:
+
+        CMP BX,AX  
+
+        JE ENDL
+
+        INC SI
+
+        INC BX
+
+        JMP START
+
+     ENDL:  
+
+        MOV AX,[SI]
+
+        MOV [DI],AX
+
+        INC DI
+
+        INC SI
+
+        LOOP ENDL
+
+      RET  
+
+      ENDP
