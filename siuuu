@@ -1,0 +1,146 @@
+
+; You may customize this and other start-up templates; 
+; The location of this template is c:\emu8086\inc\0_com_template.txt
+
+include emu8086.inc
+
+org 100h
+
+ 
+mov dx,100
+mov di,1000h
+
+print 'Enter the string with '$':'
+printn
+call get_string
+printn
+mov si,1000h
+mov di,2000h
+print 'Enter the key string:'
+printn
+call get_string
+printn
+print 'enter the length of the key:'
+printn
+call scan_num
+
+mov len1,cx
+mov cx,0h
+
+add di,10h
+
+main:
+    cmp cx , len1
+    je nextrow
+   
+    mov al , [si]
+    mov [di] , al
+   
+    jmp do
+   
+do:
+    inc cx
+    inc si
+    inc di
+    inc rowcnt
+    cmp [si],'$'
+      je NEXT2
+         
+    jmp main
+nextrow:
+    mov cx , 0H
+    sub di , len1
+    add di , 10H
+    jmp main
+NEXT2:
+    cmp cx , len1
+    je endloop
+    mov [di],'x'
+    inc di 
+    INC CX
+    jmp NEXT2
+RET
+;    
+;main:
+;
+;        
+;        
+;        cmp cx,len1
+;        je next
+;        
+;        mov al,[si]
+;        mov [di],al
+;        inc si
+;        inc di
+;        inc cx
+;              
+;        
+;        cmp [si],'$'
+;        je next2
+;        
+;        jmp main
+;        
+;        
+;     next :
+;        
+;        
+;        ;mov cx,0h
+;        add di,100h
+;        inc si
+;        jmp main
+;        
+;        
+;     next2:
+;    
+;        ret
+;        cmp cx,len1
+;        je endloop
+;        mov [di],'x'
+;        inc cx
+;        inc di
+;        jmp next2
+;        
+;        
+       
+endloop:  
+    cmp cx, len1
+    
+    ret
+
+       
+       
+       
+       
+       
+       
+   
+
+
+
+
+
+
+
+
+
+
+
+len1 dw ?     
+rowcnt dw ?
+
+
+
+
+
+
+
+
+
+
+ret
+define_get_string
+define_scan_num
+define_print_string
+
+
+
