@@ -1,0 +1,67 @@
+org 100h
+include 'emu8086.inc'
+
+mov dx, 100h
+mov di, 1000h
+
+print "Enter string ending with $: "
+call get_string
+printn
+print "Enter key value: "
+call scan_num
+mov key, cl
+mov si, 1000h
+mov di, 2000h
+call ceasar_cipher
+mov si, 2000h
+printn
+call print_string
+
+
+ret
+
+ceasar_cipher proc
+    check:
+    and ax, 0
+    mov al, [si]
+    cmp ax, '$'
+    je exitc
+    sub al, 65
+    add al, key
+    call mod
+    add al, 65
+    mov [di],al
+    inc si
+    inc di
+    jmp check
+   
+exitc:
+    ret
+ceasar_cipher endp
+
+
+mod proc
+    comp:
+    cmp ax, 0
+    jl compare2
+    compare1:
+    cmp ax, 26
+    jl exitm
+    sub ax, 26
+    jmp compare1
+   
+    compare2:
+    add ax, 26
+    jmp comp
+   
+exitm:
+    ret
+mod endp    
+       
+
+key db ?
+define_get_string
+define_print_string
+define_scan_num
+define_print_num
+define_print_num_uns
