@@ -1,0 +1,60 @@
+  #include<iostream>
+#include<math.h>
+
+using namespace std;
+
+int max(int a,int b);
+void warshalls(int p[10][10],int n)
+{
+    int i,j,k;
+    for(k=1;k<=n;k++)
+      for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+          p[i][j] = max(p[i][j],p[i][k]&&p[k][j]);
+}
+
+int max(int a,int b)
+{
+    if(a>b)
+        return (a);
+    else
+        return b;
+}
+
+int main()
+{
+    int p[10][10]={0},v,e,m,n,i,j;
+    cout<<"Enter the number of vertices: ";
+    cin>>v;
+    cout<<"\nEnter the number of edges: ";
+    cin>>e;
+
+    for(i=1;i<=e;i++)
+    {
+        cout<<"\nEnter the end vertex of the edge "<<i<<": ";
+        cout<<"From ---> ";
+        cin>>m;
+        cout<<"To ---> ";
+        cin>>n;
+        p[m][n] = 1;
+    }
+
+    cout<<"\n\nThe entered matrix is: \n";
+    for(i=1;i<=v;i++)
+    {
+        for(j=1;j<=v;j++)
+            cout<<p[i][j]<<"\t";
+        cout<<endl;
+    }
+
+    warshalls(p,v);
+    cout<<"\n\nThe transitive matrix is: \n";
+    for(i=1;i<=v;i++)
+    {
+        for(j=1;j<=v;j++)
+            cout<<p[i][j]<<"\t";
+        cout<<endl;
+    }
+
+    return 0;
+}
