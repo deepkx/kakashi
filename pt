@@ -1,0 +1,53 @@
+#include<iostream>
+using namespace std;
+int findthief(char a[],int n,int k);
+int main()
+{
+    int n,k;
+    cout<<"Enter the value for N:";
+    cin>>n;
+    char a[n];
+    cout<<"Enter the value for K:";
+    cin>>k;
+    cout<<"Enter the elements in the array:"<<endl;
+    for(int i=0;i<n;i++)
+    {
+        cin>>a[i];
+    }
+    int res=findthief(a,n,k);
+    cout<<"RESULT:"<<res<<endl;
+}
+int findthief(char a[],int n,int k)
+{
+    int count=0,j,p;
+    for(int i=0;i<n;i++)
+    {
+        if(a[i]=='P')
+        {
+            for(int c=-k;c<=k;c++)
+            {
+                if(a[i+c]=='T' && i!=j)
+                {
+                    count+=1;
+                    a[i+c]='C';
+//                    j=i+c;
+//                    cout<<i<<" "<<c<<" "<<j<<endl;
+                    break;
+                }
+                else if(a[i-c]=='T' && i!=j)
+                {
+                    count++;
+                    a[i-c]='C';
+//                    j=i-c;
+//                    cout<<i<<" "<<c<<" "<<j<<endl;
+                    break;
+                }
+            }
+        }
+        else if(a[i]=='T')
+        {
+            continue;
+        }
+    }
+    return count;
+}
