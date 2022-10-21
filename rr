@@ -1,0 +1,26 @@
+#include<iostream>
+using namespace std;
+
+int binomial(int n, int k)
+{
+    if(k==0 || k==n)
+        return 1;
+    else
+        return binomial(n-1,k-1) + binomial(n-1,k);
+}
+
+int main()
+{
+    int n, k,i,j;
+    cout<<"\nEnter the value of n : ";
+    cin>>n;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<i+1;j++)
+        {
+            cout<<binomial(i,j)<<" ";
+        }
+        cout<<endl;
+    }
+
+}
