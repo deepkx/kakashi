@@ -1,0 +1,67 @@
+#include<iostream>
+using namespace std;
+
+int max(int a,int b);
+
+floyds(int p[10][10],int v)
+{
+    int i,j,k;
+    for(k=1;k<=v;k++)
+        for(i=1;i<=v;i++)
+            for(j=1;j<=v;j++)
+                if(i==j)
+                    p[i][j] = 0;
+                else
+                    p[i][j] = min(p[i][j],p[i][k]+p[k][j]);
+}
+
+int min(int a,int b)
+{
+    if(a<b)
+        return a;
+    else
+        return b;
+}
+
+void printmatrix(int mat[][10],int v)
+{
+    int i,j;
+    for(i=1;i<=v;i++)
+    {
+         for(j=1;j<=v;j++)
+            cout<<mat[i][j]<<"\t";
+         cout<<endl;
+    }
+}
+int main()
+{
+    int p[10][10],v,e,w,m,n,i,j;
+    cout<<"Enter the number of vertices: ";
+    cin>>v;
+    cout<<"\nEnter the number of edges: ";
+    cin>>e;
+
+    for(i=1;i<=v;i++)
+        for(j=1;j<=v;j++)
+            p[i][j] = 999;
+
+    printmatrix(p,v);
+    for(i=1;i<=e;i++)
+    {
+        cout<<"\nEnter the end vertex of the edge "<<i<<": ";
+        cout<<"From ---> ";
+        cin>>m;
+        cout<<"To ---> ";
+        cin>>n;
+        cout<<"\nEnter the weight of the edge: ";
+        cin>>w;
+        p[m][n] = w;
+    }
+    printmatrix(p,v);
+
+    floyds(p,v);
+    cout<<endl;
+    printmatrix(p,v);
+
+    return 0;
+}
