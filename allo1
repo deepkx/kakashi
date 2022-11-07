@@ -1,0 +1,63 @@
+DBMS LAB TEST – 2
+
+1.)  CONSTRAINT – 1 :-
+
+alter table athlete
+add constraint c_aid check(aid like 'A%'and substr(aid,1,4) not like '[0-9][0-9][0-9][0-9]');
+
+2.) frst letter capital
+alter table athlete
+add constraint c_name check(name = initcap(name));
+
+3.) birthdate mandatory ( greater than given year)
+
+
+####
+
+alter table athlete
+add constraint c_birthdate check(extract(year from birthdate)>'1995');
+
+alter table athlete
+add constraint c_country check(country in('India','USA','Italy','England'));
+
+alter table athlete
+add constraint c_height check(height > 160);
+
+
+4.) TO_DATE:-
+
+insert into supplier1(snr,sname,dob,city) values('S001','Kenstar',to_date('01/01/2002','dd/mm/yyyy'),'Chennai');
+
+5.) upper and lower
+
+alter table sports
+add constraint s_sname check(sname = lower(sname));
+
+alter table sports
+add constraint s_sname check(sname = upper(sname));
+
+
+6.) COMPOSITE KEY
+
+alter table participation
+add constraint pk primary key(aid,sid);
+
+
+7.) FOREIGN KEY
+
+alter table participation
+add constraint fk2 foreign key(sid) references sports(sid);
+
+NOTE : F O R E I G N 
+
+
+
+
+
+
+
+
+
+
+
+
