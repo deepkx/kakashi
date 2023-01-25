@@ -1,0 +1,43 @@
+1)fplot('(x^2)-(10*x)+15',[-20,20])
+	
+
+2)
+x=[0:10*pi];
+y=x.*sin(x);
+plot(x,y);
+
+
+ii) 
+x=[0:10*pi];
+y=x.*sin(x);
+semilogx(x,y)
+
+
+
+iii) loglog(x,y);
+
+
+c)
+t=linspace(0,2*pi,1000);;
+r=sqrt(2*sin(5*t));
+polar(t,r);
+
+Fill:
+	x=r.*cos(t);
+	y=r.*sin(t);
+	fill(x,y,'r');
+
+iv) x=0:4;
+   y=-4:4;
+[x,y]=meshgrid(x,y);
+z=x.^2-y.^2;
+mesh(x,y,z);
+
+
+
+
+
+
+Surf(x,y,z);
+ 
+contour3(x,y,z,15);
