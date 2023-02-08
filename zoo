@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Zoo: Welcome!</title>
+        <link rel="stylesheet"  href="style.css">
+        <meta charset="UTF8">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500&family=Nunito:wght@200&family=Roboto&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+       <div class="content">
+            <h1>The Zoo</h1>
+            <h3>Come and meet the animals!</h3>
+       
+
+            <div class="menu">
+                <p>Information</p>
+                <p>Llamas</p>
+                <p>Bears</p>
+                <p>Tigers</p>
+                <p>Penguins</p>
+                <p>Guinea pigs</p>
+            </div>
+
+            <div class="info">
+                <img src="tiger.avif" alt="tiger" type="avif">
+                <h2>Information:</h2>
+                <p>
+                    The Zoo is a free, family-focused zoo
+                    which has a small range of exotic and
+                    domestic animals and is recognised as
+                    one of the most progressive zoos in the
+                    world. There is lots to see and do all
+                    year, including events, eye-to-eye
+                    encounters, behind the scenes tours
+                    and more!<br>
+                    Zoo experiences motivate children to
+                    care for the enviroment and this is
+                    especially important as they will be the
+                    caretakers of our precious biodiversity
+                    in the future.<br>
+                    The Zoo was started in 1965 by two very dedicated conservationists, and
+                    since that time we have been creating animal exhibits that not only emulate
+                    the animals' natural habitats but also provide spectators and visitors with
+                    excellent views of both the outdoor areas and the sleeping quarters.<br>
+                    <strong>Hours:</strong> We are open 9am to 5pm every day.<br>
+                    We are open all public holidays including Christmas Day.<br>
+                    <strong>Facilities:</strong> Wheelchair and pushchair access, playground, sun shade, toilets
+                    and picnic tables.<br>
+                    The Zoo is a member of the <strong><a href="" style="color:rgb(155, 7, 7);">International Zoo Educators Association</a></strong></p>
+                
+            </div>
+
+            <div class="footer"><p>Call us on 012 234 5678 or <a href="mailto:abc@gmail.com"  style="color:#e3cca1;">email us</a></p></div>
+
+
+    </div>
+    </body>
+
+</html>
+
+
+
+
+body{
+    background-color: #e3cca1;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+.content{
+    background-color: white;
+    padding: 10px;
+    border-left: 2px solid #4d331e;
+    border-right: 2px solid #4d331e;
+}
+
+.content h1{
+    font-size: 100px;
+    font-family: 'Mukta', sans-serif;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    color: #4d331e;
+    letter-spacing: 2px;
+}
+
+.content h3{
+    font-family: 'Mukta', sans-serif;
+    font-size: 25px;
+    margin-top: 0px;
+    margin-bottom:0px;
+    position: relative;
+    top: -30px;
+    left: 10px;
+    color: #4d331e;
+    letter-spacing: 1px;
+
+}
+
+.menu{
+    margin-top:0px;
+    position: relative;
+    left: 10px;
+    top: -10px;
+}
+
+
+.menu p{
+    background-color: #e3cca1;
+    border: 2px solid #4d331e;
+    padding: 3px;
+    width: 20%;
+    margin-top:4px;
+    margin-bottom: 4px;
+    font-family: 'Mukta', sans-serif;
+    color: #317825;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.info{
+    position: relative;
+    left: 300px;
+    top: -320px;
+    width: 70%;
+    font-family: 'Mukta', sans-serif;
+    margin-right: 0px;
+}
+
+.info img{
+    width: 350px;
+    height: 300px;
+    float: right;
+    margin-left: 30px;
+    margin-bottom: 1s0px;
+}
+
+.info h2{
+    color: #4d331e;
+    margin-bottom:0px ;
+    font-size: 30px;
+}
+
+.info p{
+    margin-top: 0px;
+    font-size: 20px;
+}
+
+.footer{
+    background-color: #4d331e;
+    font-size:18px;
+    color: white;
+    padding: 4px;
+    margin: 0px;
+    text-align: center;
+    font-family: 'Mukta', sans-serif;
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    top: -290px; 
+}
+
+.footer p{
+    margin: 0;
+}
