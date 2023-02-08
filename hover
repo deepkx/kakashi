@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Problem 9</title>
+        <link rel="stylesheet"  href="style.css">
+        <meta charset="UTF8">
+
+    </head>
+
+    <body>
+        <div class="dropdown">
+            <span style="background-color: black;color: white; font-size: 30px;padding: 10px;">Menu</span>
+            <div class="dropdown-content">
+                <p>Home</p>
+                <p>News</p>
+                <p>Articles</p>
+                <p>Blog</p>
+                <p>Contact</p>
+            </div>
+           
+        </div>
+    </body>
+
+</html>
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+.dropdown-content {
+display: none;
+position: absolute;
+background-color: #f9f9f9;
+min-width: 160px;
+box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+padding: 12px 16px;
+z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+display: block;
+}
