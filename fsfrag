@@ -1,0 +1,55 @@
+def receive_file(sock):
+    file_data = b''
+    while True:
+        chunk = sock.recv(1024)
+        if chunk:
+            file_data += chunk
+        else:
+            break
+    return file_data
+
+def fragment_datagram(datagram, mtu):
+    fragments = []
+    data_offset = 0
+    while data_offset < len(datagram):
+        fragment = datagram[data_offset:data_offset + mtu]
+        fragments.append(fragment)
+        data_offset += mtu
+    return fragments
+
+def main():
+    # Set up a server socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', 12345))
+    server_socket.listen(1)
+    print("Server is listening on port 12345...")
+
+    # Wait for a client connection
+    client_socket, client_address = server_socket.accept()
+    print("Accepted connection from", client_address)
+
+    # Receive the file from the client
+    file_data = receive_file(client_socket).decode()
+    print("Received file data:\n", file_data)
+
+    # Get the MTU size
+    mtu = int(input("Enter the MTU size: "))
+
+    # Fragment the datagram
+    fragments = fragment_datagram(file_data.encode(), mtu)
+    print("Fragmented datagram into", len(fragments), "fragments")
+
+    # Store the fragmented datagram in a file
+    with open('fragmented_datagram.txt', 'wb') as f:
+        fragment_offset = 0
+        for fragment in fragments:
+            f.write(fragment)
+            print("Fragment of length", len(fragment), "written to file at offset", fragment_offset)
+            fragment_offset += len(fragment)
+    print("Fragmented datagram stored in fragmented_datagram.txt")
+
+    client_socket.close()
+    server_socket.close()
+
+if _name_ == '_main_':
+    main()
