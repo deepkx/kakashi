@@ -1,0 +1,32 @@
+import socket
+
+def reassemble_datagram(fragments, header_size):
+    header = fragments[0][:header_size]
+    data = b''.join(fragment[header_size:] for fragment in fragments)
+    return header + data
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_socket.bind(("", 12345))
+
+datagram, client_address = server_socket.recvfrom(1024)
+
+mtu = int(input("Enter the MTU size: "))
+header_size = int(input("Enter the header size: "))
+fragments = fragment_datagram(datagram, mtu)
+
+print("Received datagram fragments:")
+for index, fragment in enumerate(fragments):
+    offset = calculate_offset(index, mtu)
+    print("Fragment {} with offset {}:".format(index, offset))
+    print(fragment)
+
+reassembled_datagram = reassemble_datagram(fragments, header_size)
+print("Reassembled datagram:")
+print(reassembled_datagram)
+
+header = reassembled_datagram[:header_size]
+data = reassembled_datagram[header_size:]
+print("Header:")
+print(header)
+print("Data:")
+print(data)
