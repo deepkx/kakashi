@@ -1,0 +1,31 @@
+import socket
+
+def fragment_datagram(datagram, mtu):
+    fragments = []
+    data_offset = 0
+    while data_offset < len(datagram):
+        fragment = datagram[data_offset:data_offset + mtu]
+        fragments.append(fragment)
+        data_offset += mtu
+    return fragments
+
+def calculate_offset(index, mtu):
+    return (index * mtu) // 8
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_socket.bind(("", 12345))
+
+datagram, client_address = server_socket.recvfrom(1024)
+
+mtu = int(input("Enter the MTU size: "))
+fragments = fragment_datagram(datagram, mtu)
+
+print("Received datagram:")
+print("Datagram size:", len(datagram), "bytes")
+
+print("Datagram fragments:")
+for index, fragment in enumerate(fragments):
+    offset = calculate_offset(index, mtu)
+    print("Fragment {}:".format(index))
+    print("Fragment size:", len(fragment), "bytes")
+    print("Fragment offset:", offset, "bytes")
