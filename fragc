@@ -1,0 +1,32 @@
+import socket
+
+def create_header():
+    header = []
+    header.append(int(input("Enter the version (0-15): ")))
+    header.append(input("Enter the source address (0.0.0.0-255.255.255.255): "))
+    header.append(int(input("Enter the source port (0-65535): ")))
+    header.append(input("Enter the destination address (0.0.0.0-255.255.255.255): "))
+    header.append(int(input("Enter the destination port (0-65535): ")))
+    header.append(int(input("Enter the sequence number (0-4294967295): ")))
+    header.append(int(input("Enter the acknowledgment number (0-4294967295): ")))
+    header.append(int(input("Enter the flags (0-65535): ")))
+    header.append(int(input("Enter the header length (0-65535): ")))
+    header.append(int(input("Enter the checksum (0-65535): ")))
+
+    return header
+
+def main():
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server_address = ('localhost', 12345)
+
+    header = create_header()
+    data = input("Enter the data: ").encode()
+    header_bytes = b''.join(str(field).encode() for field in header)
+    datagram = header_bytes + data
+    print(len(datagram))
+
+    client_socket.sendto(datagram, server_address)
+    print("Datagram sent")
+
+if _name_ == "_main_":
+    main()
