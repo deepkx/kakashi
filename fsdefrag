@@ -1,0 +1,52 @@
+import socket
+
+def receive_file(sock):
+    file_data = b''
+    while True:
+        chunk = sock.recv(1024)
+        if chunk:
+            file_data += chunk
+        else:
+            break
+    return file_data
+
+def defragment_datagram(fragments):
+    return b''.join(fragments)
+
+def main():
+    # Set up a server socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', 12345))
+    server_socket.listen(1)
+    print("Server is listening on port 12345...")
+
+    # Wait for a client connection
+    client_socket, client_address = server_socket.accept()
+    print("Accepted connection from", client_address)
+
+    # Receive the fragment lengths from the client
+    fragment_lengths = receive_file(client_socket).decode().split(',')
+    fragment_lengths = [int(length) for length in fragment_lengths]
+    print("Received fragment lengths:", fragment_lengths)
+
+    # Receive the fragments from the client
+    fragments = []
+    for fragment_length in fragment_lengths:
+        fragment = client_socket.recv(fragment_length)
+        fragments.append(fragment)
+    print("Received fragments:", fragments)
+
+    # Defragment the datagram
+    datagram = defragment_datagram(fragments)
+    print("Defragmented datagram:\n", datagram.decode())
+
+    # Store the defragmented datagram in a file
+    with open('defragmented_datagram.txt', 'wb') as f:
+        f.write(datagram)
+    print("Defragmented datagram stored in defragmented_datagram.txt")
+
+    client_socket.close()
+    server_socket.close()
+
+if __name__ == '__main__':
+    main()
