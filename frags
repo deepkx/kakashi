@@ -1,0 +1,46 @@
+import socket
+
+def fragment_datagram(datagram, mtu, header_size, identification, flag, fragmentation_offset):
+    fragments = []
+    data_length = len(datagram) + header_size
+    offset = 0
+    while data_length > 0:
+        if data_length > mtu:
+            fragment = datagram[offset:offset+mtu-header_size]
+            offset += mtu - header_size
+            data_length -= mtu
+        else:
+            fragment = datagram[offset:]
+            offset += data_length - header_size
+            data_length = 0
+        fragments.append((header_size, identification, flag, fragmentation_offset, fragment))
+        fragmentation_offset += 1
+    return fragments
+
+def start_server():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('', 12345))
+    server_socket.listen(1)
+
+    print("Waiting for client to connect...")
+    client_socket, client_address = server_socket.accept()
+    print("Accepted connection from:", client_address)
+
+    data = client_socket.recv(1024).decode().split(',')
+    header_size = int(data[0])
+    identification = int(data[1])
+    flag = int(data[2])
+    fragmentation_offset = int(data[3])
+    datagram = data[4]
+    mtu = int(client_socket.recv(1024).decode().split(',')[0])
+
+    fragments = fragment_datagram(datagram, mtu, header_size, identification, flag, fragmentation_offset)
+    for fragment in fragments:
+        client_socket.send(str(fragment).encode())
+    client_socket.send("EOF".encode())
+
+    client_socket.close()
+    server_socket.close()
+
+if _name_ == '_main_':
+    start_server()
