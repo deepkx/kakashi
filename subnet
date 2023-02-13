@@ -1,0 +1,30 @@
+def binary_ip(tempip):
+    tempip=tempip[0].split(".")
+    for i in range(0,len(tempip)):
+        tempip[i]=bin(int(tempip[i]))[2:]
+        tempip[i]='0'*(8-len(tempip[i]))+tempip[i]
+    print("IP in binary = ",".".join(tempip))
+def network_address(tempip,mask):
+    subnetwork=[]
+    subnet_mask='1'*mask+'0'*(32-mask)
+    subnet_mask=str(subnet_mask)
+    subnet_add=[int(subnet_mask[i:i+8],2) for i in range(0,len(subnet_mask),8)]
+    tempip=tempip[0].split('.')
+    for i in range(0,len(subnet_add)):
+        subnetwork.append(str(int(tempip[i]) & subnet_add[i]))
+    print("Network Address = ",".".join(subnetwork))
+    mask=32-mask
+    subnet_mask='0'*(32-mask)+'1'*mask
+    subnet_broad=[]
+    subnet_broad=[int(subnet_mask[i:i+8],2) for i in range(0,len(subnet_mask),8)]
+    for i in range(0,len(subnet_broad)):
+        subnet_broad[i]=str(subnet_broad[i]+int(subnetwork[i]))
+    print("Broadcast address = ",".".join(subnet_broad))
+   
+ip=input("Enter the ip address = ")
+subnet_mask=''
+tempip=ip.split('/')
+mask=tempip.pop()
+mask=int(mask)
+binary_ip(tempip)
+network_address(tempip,mask)
