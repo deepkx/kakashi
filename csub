@@ -1,0 +1,18 @@
+import socket
+
+def start_client():
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(('localhost', 12345))
+
+    ip_address = input("Enter IP address: ")
+    subnet_mask = input("Enter subnet mask: ")
+
+    client_socket.send("{},{}".format(ip_address, subnet_mask).encode())
+
+    network_address = client_socket.recv(1024).decode()
+    print("Network address:", network_address)
+
+    client_socket.close()
+
+if _name_ == '_main_':
+    start_client()
