@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<title>Online HTML Editor</title>
+<head>
+</head>
+<style>
+   
+</style>
+<body>
+<h1><center>Simple todo list</center></h1>
+<div id="main">
+    <center>
+        <input type="text" placeholder="Enter task" id="task-input">
+        <button id="add-task" onclick="addTask()" type="submit">Add Task</button>
+    </center>
+</div>
+<br>
+<div>
+    <table border="1px solid" width="100%" id="table">
+        <thead id="tabhead">
+            <tr align="center">
+                <th border="1px solid">Status</th>
+                <th border="1px solid">Task</th>
+                <th border="1px solid">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tabBody">
+            <tr align="center">
+                <td border="1px solid"><input type="checkbox" name="check" onclick="completeStat()"></td>
+                <td border="1px solid">Clean the house</td>
+                <td border="1px solid"><button onclick="deleteTask()">Delete</button></td>
+            </tr>
+            <tr align="center">
+                <td border="1px solid"><input type="checkbox" name="check" onclick="completeStat()"></td>
+                <td border="1px solid">Clean the house</td>
+                <td border="1px solid"><button onclick="deleteTask()">Delete</button></td>
+            </tr>
+            <tr align="center">
+                <td border="1px solid"><input type="checkbox" name="check" onclick="completeStat()"></td>
+                <td border="1px solid">Clean the house</td>
+                <td border="1px solid"><button onclick="deleteTask()">Delete</button></td>
+            </tr>
+        </tbody>
+</table>
+</div>
+<br><br><br>
+<center><p id="stat">Completed 0/3 Tasks</p></center>
+<br><br>
+<div id="status">
+    <center>
+        <button type="submit" onclick="deleteAllTasks()">Delete All Tasks</button>
+        <button type="submit" onclick="completeTasks()">Mark all tasks as completed</button>
+        <button type="submit" onclick="clearStatus()">Clear status</button>
+    </center>
+</div>
+<br>
+<footer>
+    <hr>
+    <center>
+        Simple todo app in html
+    </center>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+js
+let total=3;
+let current=0;
+function addTask() {
+  var tab = document.getElementById("table");
+  var row = document.createElement("tr");
+  var cb = document.createElement("input");
+  cb.type = "checkbox";
+  cb.name="check";
+  cb.onclick=completeStat;
+  var t = document.getElementById("task-input").value;
+  var b = document.createElement("input");
+  b.type = "submit";
+  b.value = "Delete";
+  b.onclick=deleteTask;
+  var td1 = document.createElement("td");
+  td1.align="center";
+  td1.appendChild(cb);
+  var td2 = document.createElement("td");
+  td2.align="center";
+  td2.appendChild(document.createTextNode(t));
+  var td3 = document.createElement("td");
+  td3.align="center";
+  td3.appendChild(b);
+  row.appendChild(td1);
+  row.appendChild(td2);
+  row.appendChild(td3);
+  tabB=document.getElementById("tabBody");
+  tabB.append(row);
+
+  total+=1;
+  document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+}
+function deleteTask()
+{
+    event.target.parentElement.parentElement.remove();
+    total-=1;
+    document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+}
+function completeTasks()
+{
+    let c=document.getElementsByName("check");
+    for(var i=0;i<c.length;i++)
+    {
+      c[i].checked= true;
+    }
+    current=c.length;
+    document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+}
+function clearStatus()
+{
+    let c=document.getElementsByName("check");
+    for(var i=0;i<c.length;i++)
+    {
+      c[i].checked= false;
+    }
+    current=0;
+    document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+
+}
+function completeStat()
+{
+  if(event.target.checked===true)
+  {
+    current+=1;
+  }
+  else
+  {
+    current-=1;
+  }
+  
+  document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+}
+function deleteAllTasks()
+{
+  document.getElementById("tabBody").innerHTML="";
+  current=0;
+  total=0;
+  document.getElementById('stat').innerHTML=`Completed ${current}/${total} Tasks`;
+}
