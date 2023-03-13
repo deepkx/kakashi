@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration Form</title>
+  <script>
+    // Function to validate the form
+    function validateForm() {
+      // Get the values from the form
+      var userID = document.forms["registrationForm"]["userID"].value;
+      var password = document.forms["registrationForm"]["password"].value;
+      var name = document.forms["registrationForm"]["name"].value;
+      var address = document.forms["registrationForm"]["address"].value;
+      var country = document.forms["registrationForm"]["country"].value;
+      var zipcode = document.forms["registrationForm"]["zipcode"].value;
+      var email = document.forms["registrationForm"]["email"].value;
+      var gender = document.forms["registrationForm"]["gender"].value;
+      var language = document.forms["registrationForm"]["language"].value;
+      var about = document.forms["registrationForm"]["about"].value;
+
+      // Check if required fields are empty
+      if (userID == "" || password == "" || name == "" || address == "" || country == "" || zipcode == "" || email == "" || gender == "" || language == "") {
+        alert("Please fill out all required fields.");
+        return false;
+      }
+
+      // Validate email format
+      var emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        return false;
+      }
+
+      // Get confirmation from the user before submitting the form
+      var confirmation = confirm("Are you sure you want to submit the form?");
+      if (confirmation == false) {
+        return false;
+      }
+    }
+
+    // Function to add countries to select element
+    function addCountries() {
+      var countries = ["USA", "Canada", "Mexico", "England", "France", "Germany", "Japan", "China", "India", "Australia"];
+      var select = document.getElementById("country");
+      for (var i = 0; i < countries.length; i++) {
+        var option = document.createElement("option");
+        option.text = countries[i];
+        select.add(option);
+      }
+    }
+  </script>
+</head>
+<body onload="addCountries()">
+  <h1>Registration Form</h1>
+  <form name="registrationForm" onsubmit="return validateForm()">
+    <label for="userID">User ID:</label>
+    <input type="text" id="userID" name="userID" required><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" required><br>
+
+    <label for="country">Country:</label>
+    <select id="country" name="country" required>
+      <option value="">Select a country</option>
+    </select><br>
+
+    <label for="zipcode">Zip Code:</label>
+    <input type="text" id="zipcode" name="zipcode" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="gender">Gender:</label>
+    <input type="radio" id="male" name="gender" value="Male" required>
+    <label for="male">Male</label>
+    <input type="radio" id="female" name="gender" value="Female" required>
+    <label for="male">Female</label><br>
+    
+    <label for="gender">Language:</label>
+    <input type="radio" id="english" name="language" value="English" required>
+    <label for="male">English</label>
+    <input type="radio" id="nonenglish" name="language" value="Non-English" required>
+    <label for="male">Non-English</label><br>
+    
+    <label for="about">About:</label>
+    <textarea id="about" name="about" rows="5" cols="50"></textarea><br><br>
+    
+    <button type="submit">Submit</button>
+
+</form>
+</body>
+</html>
