@@ -1,0 +1,21 @@
+
+apache folder
+httpd config open in vs
+
+at the end of loadmodules
+add this
+LoadModule php_module "C:\Php\php\php8apache2_4.dll"
+
+and at line 450  
+after this
+ AddType text/html .shtml
+    AddOutputFilter INCLUDES .shtml
+</IfModule>
+
+add this
+<IfModule php_module>
+    DirectoryIndex reg.html default.php index.php
+    AddHandler application/x-httpd-php .php
+</IfModule>
+
+save as httpd.conf
