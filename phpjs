@@ -1,0 +1,96 @@
+// Get the form and all the input elements
+const form = document.registrationForm;
+const firstNameInput = form.firstName;
+const lastNameInput = form.lastName;
+const genderInput = form.gender;
+const emailInput = form.email;
+const phoneInput = form.phone;
+
+// Add event listener for when the form is submitted
+form.addEventListener('submit', (event) => {
+  // Validate all the input fields
+  if (!isValidFirstName(firstNameInput.value) ||
+      !isValidLastName(lastNameInput.value) ||
+      !isValidGender(genderInput.value) ||
+      !isValidEmail(emailInput.value) ||
+      !isValidPhoneNumber(phoneInput.value)) {
+    event.preventDefault();
+  }
+});
+
+// Function to validate first name
+function isValidFirstName(firstName) {
+  // Regular expression to match only alphabets and space
+  const nameRegex = /^[a-zA-Z ]+$/;
+
+  // Check if the first name matches the regular expression
+  if (nameRegex.test(firstName)) {
+    return true;
+  } else {
+    // If the first name is not valid, display an error message
+    firstNameInput.setCustomValidity('Please enter a valid first name');
+    firstNameInput.reportValidity();
+    return false;
+  }
+}
+
+// Function to validate last name
+function isValidLastName(lastName) {
+  // Regular expression to match only alphabets and space
+  const nameRegex = /^[a-zA-Z ]+$/;
+
+  // Check if the last name matches the regular expression
+  if (nameRegex.test(lastName)) {
+    return true;
+  } else {
+    // If the last name is not valid, display an error message
+    lastNameInput.setCustomValidity('Please enter a valid last name');
+    lastNameInput.reportValidity();
+    return false;
+  }
+}
+
+// Function to validate gender
+function isValidGender(gender) {
+  // Check if the gender is selected
+  if (gender !== '') {
+    return true;
+  } else {
+    // If the gender is not selected, display an error message
+    genderInput.setCustomValidity('Please select a gender');
+    genderInput.reportValidity();
+    return false;
+  }
+}
+
+// Function to validate email
+function isValidEmail(email) {
+  // Regular expression to match valid email format
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
+  // Check if the email matches the regular expression
+  if (emailRegex.test(email)) {
+    return true;
+  } else {
+    // If the email is not valid, display an error message
+    emailInput.setCustomValidity('Please enter a valid email address');
+    emailInput.reportValidity();
+    return false;
+  }
+}
+
+// Function to validate phone number
+function isValidPhoneNumber(phoneNumber) {
+  // Regular expression to match valid phone numbers
+  const phoneRegex = /^\d{10}$/;
+
+  // Check if the phone number matches the regular expression
+  if (phoneRegex.test(phoneNumber)) {
+    return true;
+  } else {
+    // If the phone number is not valid, display an error message
+    phoneInput.setCustomValidity('Please enter a valid 10-digit phone number');
+    phoneInput.reportValidity();
+    return false;
+  }
+}
