@@ -1,0 +1,29 @@
+<?php
+	if(S_SERVER['REQUEST_METHOD' ] == 'POST' && isset ($_POST['submit'])) {
+
+			$conn= mysqli_connect ('localhost','root','','test') or die("Connection Failed:" .mysqli_connect_error());
+
+
+			if(isset($_POST['firstName'])) {
+				$firstName = $_POST['firstName'];
+				$lastName = $_POST['lastName'];
+				$gender = $_POST['gender'];
+				$email = $_POST['email'];
+				$password = $_POST['password'];
+				$number = $_POST['number'];
+			
+
+				$sql- "INSERT INTO 'users' ('firstName', 'lastName', 'gender','email','password','number') VALUES ('$firstName', '$lastName', '$gender','$email','$password','$number')";
+
+				$query = mysqli_query($conn, $sq1);
+
+				if($query) {
+
+					echo 'Entry Successfull';
+				}
+				else{
+					echo 'Error Occurred';
+				}
+			}
+	}
+?>
