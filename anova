@@ -1,0 +1,23 @@
+install.packages('optimsimplex')
+install.packages('boot')
+read <- read.delim(file.choose(),header = TRUE,sep = ",")
+
+weight <- PlantGrowth$weight
+group <- PlantGrowth$group
+
+levels(group)
+
+head(PlantGrowth)
+summary(PlantGrowth)
+
+tapply(weight,group,mean)
+tapply(weight,group,length)
+
+anova = aov(weight~group)
+anova
+
+TukeyHSD(anova,conf.level =0.95)
+
+bartlett.test(weight~group)
+
+print("We wont reject null hypothesis")
