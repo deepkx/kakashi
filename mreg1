@@ -1,0 +1,42 @@
+# Load the readxl package
+library(readxl)
+
+# Read the Excel file and store it in a data frame
+input_data <- read_excel("path/to/excel/file.xlsx")
+
+# Create the relationship model.
+model <- lm(mpg ~ disp + hp + wt, data = input_data)
+
+# Show the model.
+print(model)
+
+# Get the Intercept and coefficients as vector elements.
+cat("# # # # The Coefficient Values # # # ","\n")
+
+a <- coef(model)[1]
+print(a)
+
+Xdisp <- coef(model)[2]
+Xhp <- coef(model)[3]
+Xwt <- coef(model)[4]
+
+print(Xdisp)
+print(Xhp)
+print(Xwt)
+
+my_function <- function(x1, x2, x3) { # create a function with the name my_function
+  Y = a + Xdisp * x1 + Xhp * x2 + Xwt * x3
+  return(Y)
+}
+
+# Read input from Excel file using read_excel function
+input_values <- read_excel("path/to/excel/file.xlsx", col_names = FALSE)
+
+# Extract the input values as variables
+x2 <- input_values[1, 1]
+x3 <- input_values[1, 2]
+x4 <- input_values[1, 3]
+
+# Call the function with input values
+k <- my_function(x2, x3, x4)
+print(k)
