@@ -1,0 +1,26 @@
+library(lpSolve)
+
+# Define the problem
+o <- c(3, 2)
+c <- matrix(c(2, 1, 1, 1), nrow = 2, byrow = TRUE)
+d <- c('<=', '<=')
+r <- c(100, 80)
+
+# Find the feasible region
+x1 <- seq(0, r[1], length = 100)
+x2 <- seq(0, r[2], length = 100)
+z <- array(0, dim = c(length(x1), length(x2)))
+for (i in 1:length(x1)) {
+  for (j in 1:length(x2)) {
+    z[i, j] <- all(c %*% c(x1[i], x2[j]) <= r)
+  }
+}
+
+# Plot the feasible region
+plot(x1, x2, type = "n", xlab = "x1", ylab = "x2")
+contour(x1, x2, z, levels = 1, drawlabels = FALSE)
+abline(a = 0, b = -c[1, 1]/c[1, 2], col = "blue")
+abline(a = 0, b = -c[2, 1]/c[2, 2], col = "red")
+axis(1)
+axis(2)
+box()
