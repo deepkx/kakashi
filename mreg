@@ -1,0 +1,32 @@
+input <- mtcars[,c("mpg","disp","hp","wt")]
+
+# Create the relationship model.
+model <- lm(mpg~disp+hp+wt, data = input)
+
+# Show the model.
+print(model)
+
+# Get the Intercept and coefficients as vector elements.
+cat("# # # # The Coefficient Values # # # ","\n")
+
+a <- coef(model)[1]
+print(a)
+
+Xdisp <- coef(model)[2]
+Xhp <- coef(model)[3]
+Xwt <- coef(model)[4]
+
+print(Xdisp)
+print(Xhp)
+print(Xwt)
+
+my_function <- function(x1,x2,x3) { # create a function with the name my_function
+  Y = a+Xdisp*x1+Xhp*x2+Xwt*x3
+  return(Y)
+}
+x1=scan("C:/Users/vivek/OneDrive/Desktop/input.txt",what=integer())
+x2=x1[1];
+x3=x1[2];
+x4=x1[3];
+k=my_function(x2,x3,x4);
+print(k)
