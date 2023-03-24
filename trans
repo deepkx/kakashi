@@ -1,0 +1,10 @@
+require(lpSolve)
+x=c(10,13,8,15,12,16,11,17,9)
+xx=matrix(x,nrow=3,ncol=3,byrow=T)
+r=c(100,200,300) //supply
+c=c(150,250,200) //demand
+rs=c('=','=','=') //rowsign
+cs=rep('=',3) //columnsign
+lp.transport(xx,direction="min",rs,r,cs,c) //Success: the objective function is 6450 output
+sol=lp.transport(xx,direction="min",rs,r,cs,c)
+sol$solution //diff here as multiple optimal sol
