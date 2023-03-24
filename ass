@@ -1,0 +1,5 @@
+x=c(2,7,7,5,7,9,5,9,7,3,8,8,5,6,10,7)
+xx=matrix(x,nrow=4,ncol=4,byrow=T)
+sol=lp.assign(xx,direction='min')
+sol
+sol$solution
