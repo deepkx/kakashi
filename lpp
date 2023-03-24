@@ -1,0 +1,11 @@
+install.packages('lpSolve')
+
+library(lpSolve)
+o=c(3,2)
+c=matrix(c(2,1,1,1),nrow=2,byrow=T)
+d=c('<=','<=') 
+r=c(100,80) 
+
+lpSolve::lp("max",o,c,d,r,compute.sens=T) 
+sol=lpSolve::lp("max",o,c,d,r,compute.sens=T) 
+sol$solution
