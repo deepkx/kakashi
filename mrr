@@ -1,0 +1,159 @@
+import copy
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+X_train = np.array([[4, 5], [5, 7], [6, 3]])
+y_train = np.array([0, 0, 1])
+
+w_init = np.zeros(X_train.shape[1])
+b_init = 0.0
+
+def predict_single_loop(x, w, b):
+    n = x.shape[0]
+    p = 0
+    for i in range(n):
+        p_i = x[i] * w[i]  
+        p = p + p_i        
+    p = p + b                
+    return p
+
+x_vec = X_train[0,:]
+print(f"x_vec shape {x_vec.shape}, x_vec value: {x_vec}")
+
+f_wb = predict_single_loop(x_vec, w_init, b_init)
+print(f"f_wb shape {f_wb.shape}, prediction: {f_wb}")
+
+def predict(x, w, b):
+    p = np.dot(x, w) + b    
+    return p    
+
+x_vec = X_train[0,:]
+print(f"x_vec shape {x_vec.shape}, x_vec value: {x_vec}")
+
+f_wb = predict(x_vec,w_init, b_init)
+print(f"f_wb shape {f_wb.shape}, prediction: {f_wb}")
+
+def compute_cost(X, y, w, b):
+    m = X.shape[0]
+    cost = 0.0
+    for i in range(m):                                
+        f_wb_i = np.dot(X[i], w) + b          
+        cost = cost + (f_wb_i - y[i])**2      
+    cost = cost / (2 * m)                        
+    return cost
+
+cost = compute_cost(X_train, y_train, w_init, b_init)
+print(f'Cost at optimal w : {cost}')
+
+def compute_gradient(X, y, w, b):
+    m,n = X.shape          
+    dj_dw = np.zeros((n,))
+    dj_db = 0.
+
+    for i in range(m):                            
+        err = (np.dot(X[i], w) + b) - y[i]  
+        for j in range(n):                        
+            dj_dw[j] = dj_dw[j] + err * X[i, j]    
+        dj_db = dj_db + err                        
+    dj_dw = dj_dw / m                                
+    dj_db = dj_db / m                                
+       
+    return dj_db, dj_dw
+
+tmp_dj_db, tmp_dj_dw = compute_gradient(X_train, y_train, w_init, b_init)
+print(f'dj_db at initial w,b: {tmp_dj_db}')
+print(f'dj_dw at initial w,b: \n {tmp_dj_dw}')
+
+def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
+    J_history = []
+    w = copy.deepcopy(w_in)  
+    b = b_in
+   
+    for i in range(num_iters):
+        dj_db,dj_dw = gradient_function(X, y, w, b)  
+        w = w - alpha * dj_dw              
+        b = b - alpha * dj_db              
+     
+        if i<100000:  
+            J_history.append( cost_function(X, y, w, b))
+
+        if i% math.ceil(num_iters / 10) == 0:
+            print(f"Iteration {i:4d}: Cost {J_history[-1]:8.2f}   ")
+       
+    return w, b, J_history
+
+initial_w = np.zeros_like(w_init)
+initial_b = 0.0
+
+iterations = 1000
+alpha = 5.0e-7
+
+w_final, b_final, J_hist = gradient_descent(X_train, y_train, initial_w, initial_b,
+                                            compute_cost, compute_gradient,
+                                            alpha, iterations)
+print(f"b,w found by gradient descent: {b_final:0.2f},{w_final} ")
+m,_ = X_train.shape
+for i in range(m):
+    print(f"prediction: {np.dot(X_train[i], w_final) + b_final:0.2f}, target value: {y_train[i]}")
+
+plt.figure()
+plt.plot(J_hist)
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.title('Cost History')
+plt.show()
+
+plt.figure()
+m, _ = X_train.shape
+x_vals = np.arange(m)
+actual_values = y_train
+predicted_values = [np.dot(X_train[i], w_final) + b_final for i in range(m)]
+plt.plot(x_vals, actual_values, label='Actual Values')
+plt.plot(x_vals, predicted_values, label='Predicted Values')
+plt.xlabel('Data Point')
+plt.ylabel('Value')
+plt.title('Actual vs. Predicted Values')
+plt.legend()
+plt.show()
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+def classify(predictions, threshold=0.5):
+    return (predictions >= threshold).astype(int)
+
+def predict_new_values(X_new, w, b):
+    predictions = []
+    for x in X_new:
+        pred = predict(x, w, b)
+        predictions.append(pred)
+    return np.array(predictions)
+
+X_new = np.array([[2, 1]])
+predictions_new = predict_new_values(X_new, w_final, b_final)
+classes_new = classify(predictions_new)
+
+print("Predictions for new data:")
+for i in range(len(X_new)):
+    print(f"Input: {X_new[i]} - Prediction: {predictions_new[i]}, Class: {classes_new[i]}")
+
+plt.figure()
+plt.plot(J_hist)
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.title('Cost History')
+plt.show()
+
+plt.figure()
+m, _ = X_train.shape
+x_vals = np.arange(m)
+actual_values = y_train
+predicted_values = [np.dot(X_train[i], w_final) + b_final for i in range(m)]
+plt.plot(x_vals, actual_values, label='Actual Values')
+plt.plot(x_vals, predicted_values, label='Predicted Values')
+plt.xlabel('Data Point')
+plt.ylabel('Value')
+plt.title('Actual vs. Predicted Values')
+plt.legend()
+plt.show()
