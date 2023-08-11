@@ -1,0 +1,98 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+x_train = np.array([2, 3, 5, 7, 9])
+y_train = np.array([4, 5, 7, 10, 15])
+
+def computeCost(w, b, x_train, y_train):
+    m = x_train.shape[0]
+    error = 0
+    for i in range(m):
+        fwb = w * x_train[i] + b
+        error += (fwb - y_train[i]) ** 2
+    error /= (2 * m)
+    return error
+
+def ComputeGradient(w, b, x_train, y_train):
+    m = x_train.shape[0]
+    dj_dw = 0
+    dj_db = 0
+    for i in range(m):
+        f_wb = w * x_train[i] + b
+        dj_dw += (f_wb - y_train[i]) * x_train[i]
+        dj_db += f_wb - y_train[i]
+    dj_dw /= m
+    dj_db /= m
+    return dj_dw, dj_db
+
+def GradientDescent(alpha, iterations, w_in, b_in, x_train, y_train):
+    w = w_in
+    b = b_in
+    for i in range(iterations):
+        dj_dw, dj_db = ComputeGradient(w, b, x_train, y_train)
+        w -= alpha * dj_dw
+        b -= alpha * dj_db
+    return w, b
+
+def predict(x, w, b):
+    return w * x + b
+
+w_in = 1
+b_in = 0
+alpha = 0.01
+iterations = 1000
+
+# Plotting the correlation between x_train and y_train
+plt.scatter(x_train, y_train, label='Data Points')
+plt.xlabel('x_train')
+plt.ylabel('y_train')
+plt.title('Correlation between x_train and y_train')
+plt.legend()
+plt.show()
+
+# Plotting the data points before fitting
+plt.scatter(x_train, y_train, label='Data Points')
+plt.xlabel('x_train')
+plt.ylabel('y_train')
+plt.title('Data Before Fitting')
+plt.legend()
+plt.show()
+
+w, b = GradientDescent(alpha, iterations, w_in, b_in, x_train, y_train)
+print("Optimal w:", w)
+print("Optimal b:", b)
+
+error = computeCost(w, b, x_train, y_train)
+print("Final error:", error)
+
+# Plotting the data points and the fitted line
+plt.scatter(x_train, y_train, label='Data Points')
+plt.plot(x_train, w * x_train + b, color='red', label='Fitted Line')
+plt.xlabel('x_train')
+plt.ylabel('y_train')
+plt.title('Linear Regression Fit')
+plt.legend()
+plt.show()
+
+# Prediction using the fitted model
+x_new = 6  # New input for prediction
+predicted_y = predict(x_new, w, b)
+print("Predicted y for x =", x_new, ":", predicted_y)
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+def predict_class(x, w, b, threshold=0.5):
+    z = w * x + b
+    probability = sigmoid(z)
+    if probability >= threshold:
+        return 1
+    else:
+        return 0
+
+# ... (your existing code)
+
+# Predicting classes using the fitted linear regression model
+x_new = 6  # New input for prediction
+predicted_y = predict_class(x_new, w, b)
+print("Predicted class for x =", x_new, ":", predicted_y)
