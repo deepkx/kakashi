@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main()
+{
+    int fd1[2], fd2[2];
+    pipe(fd1);
+    pipe(fd2);
+
+    int fd = fork();
+
+    if (fd == 0)
+    {
+        // Child process
+        close(fd1[0]); // Close reading end of first pipe
+        close(fd2[0]); // Close reading end of second pipe
+        close(fd2[1]); // Close writing end of second pipe
+
+        dup2(fd1[1], 1); // Redirect stdout to write to the first pipe
+        execlp("cat", "cat", "file.txt", NULL);
+    }
+    else
+    {
+        // Parent process
+        int fd_child = fork();
+
+        if (fd_child == 0)
+        {
+            // Child of parent process
+            close(fd1[1]); // Close writing end of first pipe
+            close(fd2[0]); // Close reading end of second pipe
+
+            dup2(fd1[0], 0); // Redirect stdin to read from the first pipe
+            dup2(fd2[1], 1); // Redirect stdout to write to the second pipe
+            execlp("grep", "grep", "a", NULL);
+        }
+        else
+        {
+            // Parent process
+            close(fd1[0]); // Close reading end of first pipe
+            close(fd1[1]); // Close writing end of first pipe
+            close(fd2[1]); // Close writing end of second pipe
+
+            dup2(fd2[0], 0); // Redirect stdin to read from the second pipe
+            execlp("wc", "wc", "-l", NULL);
+        }
+    }
+
+    return 0;
+
+
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+int main()
+{
+        int fd,pd[2];
+        pipe(pd);
+        fd=fork();
+        if(fd==0)
+        {
+                dup2(pd[1],1);     // dup2(1) is to write on screen so instead writing it in pipe using pd[1]
+                close(pd[0]);     // we close pd[0] because in child we are just writing not reading
+                execlp("ls","ls",NULL);
+        }
+        else
+        {
+                wait(NULL);
+                dup2(pd[0],0);          //dup2(0) is to read from screen so instead reading from pipe using pd[0] 
+                close(pd[1]);           //we close pd[1] because no write is performed in parent process
+                execlp("wc","wc",NULL);
+        }
+}
+
