@@ -1,0 +1,124 @@
+#include <stdio.h>
+
+#include <stdlib.h>   
+
+#include <pthread.h>
+
+#include <semaphore.h>
+
+#include <unistd.h>
+
+
+#define CHAIRS 3
+
+
+sem_t customers;
+
+sem_t barbers;
+
+sem_t mutex;
+
+
+int waiting = 0;
+
+
+void *barber(void *arg) {
+
+    while (1) {
+
+        sem_wait(&customers);
+
+        sem_wait(&mutex);
+
+        waiting--;
+
+        sem_post(&barbers);
+
+        sem_post(&mutex);
+
+        printf("Barber is cutting hair\n");
+
+        sleep(3);
+
+    }
+
+}
+
+
+void *customer(void *arg) {
+
+    int id = *(int *)arg;
+
+    while (1) {
+
+        sem_wait(&mutex);
+
+        if (waiting < CHAIRS) {
+
+            waiting++;
+
+            printf("Customer %d is waiting\n", id);
+
+            sem_post(&customers);
+
+            sem_post(&mutex);
+
+            sem_wait(&barbers);
+
+            printf("Customer %d is getting a haircut\n", id);
+
+            break;
+
+        } else {
+
+            sem_post(&mutex);
+
+            printf("Customer %d is leaving\n", id);
+
+            break;
+
+        }
+
+    }
+
+}
+
+
+int main() {
+
+    sem_init(&customers, 0, 0);
+
+    sem_init(&barbers, 0, 0);
+
+    sem_init(&mutex, 0, 1);
+
+
+    pthread_t barber_thread;
+
+    pthread_t customer_threads[CHAIRS];
+
+
+    pthread_create(&barber_thread, NULL, barber, NULL);
+
+
+    int i, ids[CHAIRS];
+
+    for (i = 0; i < CHAIRS; i++) {
+
+        ids[i] = i;
+
+        pthread_create(&customer_threads[i], NULL, customer, &ids[i]);
+
+    }
+
+
+    for (i = 0; i < CHAIRS; i++) {
+
+        pthread_join(customer_threads[i], NULL);
+
+    }
+
+
+    return 0;
+
+}
