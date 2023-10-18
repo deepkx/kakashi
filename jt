@@ -1,0 +1,58 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MultithreadingExample {
+    public static void main(String[] args) {
+        int numThreads = 3; // Number of threads to create
+
+        List<Thread> threads = new ArrayList<>();
+        List<String> results = new ArrayList<>();
+
+        // Create and start threads in a loop
+        for (int i = 0; i < numThreads; i++) {
+            Thread thread = new NumberPrinter("Thread " + (i + 1), results);
+            threads.add(thread);
+            thread.start();
+        }
+
+        // Use join() to wait for all threads to finish
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Print the results
+        for (String result : results) {
+            System.out.println(result);
+        }
+        
+        System.out.println("All threads have finished.");
+    }
+}
+
+class NumberPrinter extends Thread {
+    private String threadName;
+    private List<String> results;
+
+    public NumberPrinter(String name, List<String> results) {
+        this.threadName = name;
+        this.results = results;
+    }
+
+    @Override
+    public void run() {
+        try {
+            StringBuilder result = new StringBuilder();
+            for (int i = 1; i <= 10; i++) {
+                result.append(threadName).append(": ").append(i).append("\n");
+                Thread.sleep((long) (Math.random() * 1000));
+            }
+            results.add(result.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
