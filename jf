@@ -1,0 +1,53 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileOpenCloseExample {
+    public static void main(String[] args) {
+        // Define the file path
+        String filePath = "example.txt";
+
+        // Attempt to open the file for writing
+        File file = new File(filePath);
+
+        try {
+            // Create a FileWriter to write to the file
+            FileWriter writer = new FileWriter(file);
+
+            // Write data to the file
+            writer.write("Hello, world!");
+            writer.write("\nThis is a Java file I/O example.");
+
+            // Close the FileWriter to release system resources
+            writer.close();
+
+            System.out.println("File '" + filePath + "' has been created and written successfully.");
+
+            // Now, let's read the content of the file
+            FileReader reader = new FileReader(file);
+            char[] buffer = new char[1024];
+            int bytesRead;
+
+            System.out.println("File contents:");
+            while ((bytesRead = reader.read(buffer)) != -1) {
+                String content = new String(buffer, 0, bytesRead);
+                System.out.print(content);
+            }
+
+            // Close the FileReader
+            reader.close();
+        } catch (IOException e) {
+            System.err.println("An error occurred while working with the file: " + e.getMessage());
+        }
+    }
+}
+
+ try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+         String line;
+         while ((line = reader.readLine()) != null) {
+         System.out.println(line);
+         }
+         } catch (IOException e) {
+         System.err.println("An error occurred while reading the file: " + e.getMessage());
+         }
