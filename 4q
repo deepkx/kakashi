@@ -1,0 +1,42 @@
+def is_safe(board, row, col):
+    # Check if there is a queen in the same column
+    for i in range(row):
+        if board[i] == col or \
+           board[i] - i == col - row or \
+           board[i] + i == col + row:
+            return False
+    return True
+
+def dfs(board, row):
+    if row == len(board):
+        return [board[:]]
+    
+    solutions = []
+    for col in range(len(board)):
+        if is_safe(board, row, col):
+            board[row] = col
+            solutions += dfs(board, row + 1)
+            board[row] = -1
+    
+    return solutions
+
+def print_solution(solution):
+    for row in solution:
+        line = ['.'] * len(solution)
+        line[row] = 'Q'
+        print(' '.join(line))
+
+def main():
+    board_size = 4
+    board = [-1] * board_size
+    solutions = dfs(board, 0)
+    if solutions:
+        print("Solutions found:")
+        for solution in solutions:
+            print_solution(solution)
+            print()
+    else:
+        print("No solutions found.")
+
+if __name__ == "__main__":
+    main()
