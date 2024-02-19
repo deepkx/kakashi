@@ -1,0 +1,42 @@
+from collections import deque
+
+def pour_water(a, b, target):
+    visited = set()
+    q = deque([(0, 0)])
+    path = []
+
+    while q:
+        u = q.popleft()
+
+        # Convert the list to a tuple before checking for membership
+        u_tuple = tuple(u)
+        if u_tuple in visited:
+            continue
+
+        if u[0] == target or u[1] == target:
+            path.append([u[0], u[1]])
+            print_solution(path)
+            return
+
+        path.append([u[0], u[1]])
+        visited.add(u_tuple)
+
+        q.append([u[0], b])  # Fill Jug2
+        q.append([a, u[1]])  # Fill Jug1
+        q.append([u[0] + min(u[1], a - u[0]), u[1] - min(u[1], a - u[0])])  # Pour from Jug2 to Jug1
+        q.append([u[0] - min(u[0], b - u[1]), u[1] + min(u[0], b - u[1])])  # Pour from Jug1 to Jug2
+        q.append([a, 0])  # Empty Jug2
+        q.append([0, b])  # Empty Jug1
+
+    print("No solution")
+
+def print_solution(path):
+    for state in path:
+        print("(", state[0], ",", state[1], ")")
+
+# Driver code
+if __name__ == "__main__":
+    
+    Jug1, Jug2, target = 4, 3, 2
+    print("Path from initial state to solution state:")
+    pour_water(Jug1, Jug2, target)
