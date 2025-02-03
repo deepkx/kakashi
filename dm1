@@ -1,0 +1,96 @@
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+nltk.download('punkt_tab')
+nltk.download('punkt')
+nltk.download('stopwords')
+
+text = """It is a truth universally acknowledged, that a single man in possession
+of a good fortune, must be in want of a wife. However little known the feelings
+or views of such a man may be on his first entering a neighbourhood, this truth
+is so well fixed in the minds of the surrounding families, that he is considered
+the rightful property of some one or other of their daughters."""
+
+tokens = word_tokenize(text.lower())
+filtered_tokens = [word for word in tokens if word not in stopwords.words('english')]
+# filtered_tokens = []
+# for words in tokens:
+#   if words not in stopwords.words('english'):
+#     filtered_tokens.append(words)
+
+
+print("Stop words removed:", filtered_tokens)
+
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger_eng')
+
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+
+# Stemming
+stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
+print("Stemmed Words:", stemmed_words)
+
+# stemmed_words = []
+# for word in filtered_tokens:
+#   stemmed_words.append(stemmer.stem(word))
+# print("Stemmed Words:", stemmed_words)
+
+
+# Lemmatization
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+print("Lemmatized Words:", lemmatized_words)
+
+# POS Tagging
+pos_tags = pos_tag(filtered_tokens)
+print("POS Tags:", pos_tags)
+
+from nltk.probability import FreqDist
+
+freq_dist = FreqDist(filtered_tokens)
+
+# Most frequent terms
+most_common = freq_dist.most_common(5)
+print("Most Common Words:", most_common)
+
+# Least frequent terms
+least_common = [word for word, count in freq_dist.items() if count == 1]
+print("Least Common Words:", least_common)
+
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+
+documents = [
+    "Text processing is useful.",
+    "NLTK helps with text analysis.",
+    "Python is great for NLP."
+]
+
+# d1,d2,d3...
+# documents = [d1,d2,d3]
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(documents).toarray()
+
+df = pd.DataFrame(X, columns=vectorizer.get_feature_names_out())
+print("Word Document Matrix:\n", df)
+
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_extraction.text import TfidfTransformer
+
+labels = ["Positive", "Negative", "Positive"]  # Sample labels
+X_train, X_test, y_train, y_test = train_test_split(documents, labels, test_size=0.2, random_state=42)
+
+# Pipeline for vectorization and classification
+model = make_pipeline(CountVectorizer(), TfidfTransformer(), MultinomialNB())
+model.fit(X_train, y_train)
+
+# Predictions
+predictions = model.predict(X_test)
+print("Predictions:", predictions)
