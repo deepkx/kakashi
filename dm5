@@ -1,0 +1,39 @@
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Documents
+docs = [
+    "Statistical approaches to processing natural language text have become dominant in recent years...",
+    "This book offers a highly accessible introduction to natural language processing...",
+    "Class-tested and coherent, this groundbreaking new textbook teaches web-era information retrieval...",
+    "Class-tested and coherent, this textbook teaches classical and web information retrieval...",
+    "An information retrieval (IR) system is designed to analyse, process and store sources of information...",
+    "Class-tested and coherent, this textbook teaches classical and web information retrieval...",
+    "Processing multimedia content has emerged as a key area for the application of machine learning techniques...",
+    "Through a series of recent breakthroughs, deep learning has boosted the entire field of machine learning..."
+]
+
+# Query for comparison
+query = "information retrieval system"
+
+# Vector Space Model (Cosine Similarity)
+vectorizer = CountVectorizer(stop_words='english')
+X = vectorizer.fit_transform(docs)
+query_vec = vectorizer.transform([query])
+
+# Compute cosine similarity between the query and the documents
+cosine_sim = cosine_similarity(query_vec, X).flatten()
+
+# Print results for VSM (Cosine Similarity)
+print("Cosine Similarity (Vector Space Model):")
+for i, score in enumerate(cosine_sim):
+    print(f"Doc {i+1}: {score:.4f}")
+
+# Boolean Model
+print("\nBoolean Model Results (Exact Match):")
+for i, doc in enumerate(docs):
+    if all(word in doc.lower() for word in query.lower().split()):
+        print(f"Doc {i+1}: Match")
+    else:
+        print(f"Doc {i+1}: No Match")
