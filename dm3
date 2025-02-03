@@ -1,0 +1,80 @@
+import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Define the documents
+documents = [
+    "Statistical approaches to processing natural language text have become dominant in recent years. This foundational text is the first comprehensive introduction to statistical natural language processing. The book contains all the theory and algorithms needed for building natural language tools. It provides broad but rigorous coverage of mathematical and linguistic foundations, as well as detailed discussion of statistical methods, allowing students and researchers to construct their own implementations. The book covers collocation finding, word sense disambiguation, probabilistic parsing, information retrieval, and other applications.",
+    "This book offers a highly accessible introduction to natural language processing, the field that supports a variety of language technologies, from predictive text and email filtering to automatic summarization and translation. With it, you will learn how to write Python programs that work with large collections of unstructured text. You will access richly annotated datasets using a comprehensive range of linguistic data structures, and you will understand the main algorithms for analyzing the content and structure of written communication.",
+    "Class-tested and coherent, this groundbreaking new textbook teaches web-era information retrieval, including web search and the related areas of text classification and text clustering from basic concepts. Written from a computer science perspective by three leading experts in the field, it gives an up-to-date treatment of all aspects of the design and implementation of systems for gathering, indexing, and searching documents; methods for evaluating systems; and an introduction to the use of machine learning methods on text collections.",
+    "Class-tested and coherent, this textbook teaches classical and web information retrieval, including web search and the related areas of text classification and text clustering from basic concepts. It gives an up-to-date treatment of all aspects of the design and implementation of systems for gathering, indexing, and searching documents; methods for evaluating systems; and an introduction to the use of machine learning methods on text collections.",
+    "An information retrieval (IR) system is designed to analyze, process and store sources of information and retrieve those that match a particular user’s requirements. A bewildering range of techniques is now available to the information professional attempting to successfully retrieve information. It is recognized that today’s information professionals need to concentrate their efforts on learning the techniques of computerized IR. However, it is this book’s contention that it also benefits them to learn the theory, techniques and tools that constitute the traditional approaches to the organization and processing of information.",
+    "Class-tested and coherent, this textbook teaches classical and web information retrieval, including web search and the related areas of text classification and text clustering from basic concepts. It gives an up-to-date treatment of all aspects of the design and implementation of systems for gathering, indexing, and searching documents; methods for evaluating systems; and an introduction to the use of machine learning methods on text collections. All the important ideas are explained using examples and figures, making it perfect for introductory courses in information retrieval for advanced undergraduates and graduate students in computer science.",
+    "Processing multimedia content has emerged as a key area for the application of machine learning techniques, where the objectives are to provide insight into the domain from which the data is drawn, and to organize that data and improve the performance of the processes manipulating it. Arising from the EU MUSCLE network, this multidisciplinary book provides a comprehensive coverage of the most important machine learning techniques used and their application in this domain.",
+    "Through a series of recent breakthroughs, deep learning has boosted the entire field of machine learning. Now, even programmers who know close to nothing about this technology can use simple, efficient tools to implement programs capable of learning from data. This practical book shows you how."
+]
+
+# Step 1: Create Document-Term Matrix (DTM) using CountVectorizer
+vectorizer = CountVectorizer(stop_words='english')
+X = vectorizer.fit_transform(documents)
+
+# Step 2: Query matching documents (keyword matching)
+queries = [
+    "Natural Language Processing","Information Retrieval",
+    "Book Text",
+    "Book",
+    "Web HTML",
+    "Text Theory"
+]
+
+# Function to retrieve documents containing any keyword in a query
+def retrieve_documents(query, X, vectorizer):
+    query_terms = query.lower().split()
+    term_indices = [vectorizer.vocabulary_.get(term) for term in query_terms if term in vectorizer.vocabulary_]
+    matching_docs = np.any(X[:, term_indices].toarray(), axis=1)
+    return np.where(matching_docs)[0] + 1  # Adding 1 to match document numbers
+
+# Retrieve documents for each query
+retrieved_docs = {query: retrieve_documents(query, X, vectorizer) for query in queries}
+
+# retrieved_docs = {}
+# for query in queries:
+#   retrieved_docs[query] = retrieve_documents(query, X, vectorizer)
+
+
+# Step 3: Boolean Model and Query Operations (AND, OR)
+
+# Create a Boolean model (1 for term occurrence, 0 for absence)
+boolean_dtm = (X.toarray() > 0).astype(int)
+boolean_df = pd.DataFrame(boolean_dtm, columns=vectorizer.get_feature_names_out())
+
+# Query Operations for Boolean Model
+def boolean_query(operation):
+    if operation == 'term1 AND term3 AND NOT term2':
+        term1, term2, term3 = 'statistical', 'text', 'processing'
+        result = (boolean_df[term1] & boolean_df[term3] & ~boolean_df[term2])
+        return np.where(result)[0] + 1
+
+# Find documents for boolean query term1 ∧ term3 ∧ ¬ term2
+boolean_result = boolean_query('term1 AND term3 AND NOT term2')
+
+# Step 4: Calculate TF-IDF
+tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf_vectorizer.fit_transform(documents)
+tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vectorizer.get_feature_names_out())
+
+# Calculate term frequency (TF), inverse document frequency (IDF) and normalized TF-IDF
+tfidf_matrix_array = tfidf_matrix.toarray()  # Convert sparse matrix to dense
+tf = tfidf_matrix_array / tfidf_matrix_array.sum(axis=1)[:, np.newaxis]  # Normalized TF
+idf = np.log(len(documents) / (np.sum(tfidf_matrix_array > 0, axis=0) + 1))  # IDF
+normalized_tfidf = tf * idf  # Normalized TF-IDF
+
+# Results
+print("Document-Term Matrix:\n", pd.DataFrame(X.toarray(), columns=vectorizer.get_feature_names_out()))
+print("\nRetrieved Documents for Queries:")
+for query, docs in retrieved_docs.items():
+    print(f"Query: '{query}' -> Documents: {docs}")
+
+print("\nBoolean Query 'term1 AND term3 AND NOT term2' Result: ", boolean_result)
+print("\nNormalized TF-IDF Weights:\n", normalized_tfidf)
