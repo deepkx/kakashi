@@ -1,0 +1,48 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+
+nltk.download('punkt')
+nltk.download('wordnet')
+
+# Given Documents
+documents = {
+    "d1": "Big cats are nice and funny",
+    "d2": "Small dogs are better than big dogs",
+    "d3": "Small cats are afraid of small dogs",
+    "d4": "Big cats are not afraid of small dogs",
+    "d5": "Funny cats are not afraid of small dogs"
+}
+
+# (a) Tokenization
+tokenized_docs = {doc: word_tokenize(text) for doc, text in documents.items()}
+
+# for doc, text in document.items():
+#   tokenized_docs[doc] = word_tokenize(text)
+
+
+
+print("Tokenized Documents:")
+for doc, tokens in tokenized_docs.items():
+    print(f"{doc} =", "—".join(tokens))
+
+# (b) Normalization (Lowercasing + Singularization)
+lemmatizer = WordNetLemmatizer()
+normalized_docs = {
+    doc: [lemmatizer.lemmatize(word.lower()) for word in tokens]
+    for doc, tokens in tokenized_docs.items()
+}
+
+# for doc, tokens in tokenized_docs.items():
+#   for word in tokens:
+#     normalized_docs[doc].append(lemmatizer.lemmatize(word.lower()))
+
+print("\nNormalized Documents:")
+for doc, tokens in normalized_docs.items():
+    print(f"{doc} =", "—".join(tokens))
+
+# (c) Compute Dictionary (Unique Words from All Documents)
+dictionary = sorted(set(word for tokens in normalized_docs.values() for word in tokens))
+
+
+print("\nDictionary =", set(dictionary))
