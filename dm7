@@ -1,0 +1,88 @@
+import re
+import numpy as np
+import pandas as pd
+from collections import defaultdict
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import precision_score, recall_score
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload file in Colab
+uploaded = files.upload()
+file_name = list(uploaded.keys())[0]
+df = pd.read_csv("/content/action.csv")
+
+# Text Preprocessing
+def preprocess_text(text):
+    if isinstance(text, str):
+        text = text.lower()
+        text = re.sub(r'[^a-z0-9\s]', '', text)
+        return text
+    return ""
+
+# Building Inverted Index
+def build_inverted_index(docs):
+    inverted_index = defaultdict(set)
+    for doc_id, text in enumerate(docs):
+        words = set(preprocess_text(text).split())
+        for word in words:
+            inverted_index[word].add(doc_id)
+    return inverted_index
+print("Inverted Index:")
+for word, doc_ids in inverted_index.items():
+    print(f"{word}: {doc_ids}")
+
+# Compute TF-IDF
+def compute_tfidf(docs):
+    vectorizer = TfidfVectorizer(preprocessor=preprocess_text, stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(docs)
+    return vectorizer, tfidf_matrix
+
+# Retrieve Relevant Documents using TF-IDF
+def retrieve_documents(query, vectorizer, tfidf_matrix, top_n=10):
+    query_tfidf = vectorizer.transform([query])
+    scores = np.dot(tfidf_matrix, query_tfidf.T).toarray().flatten()
+    ranked_indices = np.argsort(scores)[::-1][:top_n]
+    return ranked_indices, scores[ranked_indices]
+
+print("\nTF-IDF Scores:")
+for doc_id, scores in enumerate(tfidf_dense):
+    print(f"Document {doc_id}: {scores}")
+
+# Precision and Recall Calculation
+def evaluate_precision_recall(retrieved_docs, relevant_docs):
+    y_true = [1 if doc in relevant_docs else 0 for doc in retrieved_docs]
+    y_pred = [1] * len(retrieved_docs)
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    return precision, recall
+
+# Interpolated Precision-Recall Curve
+def interpolated_pr_curve(precision, recall):
+    recall_levels = np.linspace(0, 1, 11)
+    interpolated_precision = []
+    for r in recall_levels:
+        interpolated_precision.append(max([p for p, r_ in zip(precision, recall) if r_ >= r], default=0))
+    plt.plot(recall_levels, interpolated_precision, marker='o')
+    plt.xlabel('Recall')
+    plt.ylabel('Interpolated Precision')
+    plt.title('Interpolated Precision-Recall Curve')
+    plt.show()
+
+# Load movie descriptions
+descriptions = df['description'].fillna('').tolist()
+vectorizer, tfidf_matrix = compute_tfidf(descriptions)
+
+# Query example
+query = "Find action and comedy movies with rating between 8 and 10"
+retrieved_docs, scores = retrieve_documents(query, vectorizer, tfidf_matrix)
+print("Top retrieved documents:", retrieved_docs)
+
+
+# Example relevant documents (mock data)
+relevant_docs = set(retrieved_docs[:5])  # Assume top 5 are relevant
+precision, recall = evaluate_precision_recall(retrieved_docs, relevant_docs)
+print(f"Precision: {precision:.2f}, Recall: {recall:.2f}")
+
+# Plot Interpolated Precision-Recall Curve
+interpolated_pr_curve([precision], [recall])
