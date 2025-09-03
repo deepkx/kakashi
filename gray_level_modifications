@@ -1,0 +1,77 @@
+import math
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def linear_identity(pixel_value):
+    """Identity transformation."""
+    return pixel_value
+
+def linear_negative(pixel_value):
+    """Negative transformation."""
+    return 255 - pixel_value
+
+def log_transformation(pixel_value, c=255):
+    """Log transformation."""
+    if pixel_value == 0:  # To avoid log(0)
+        return 0
+    return int(c * (math.log(1 + pixel_value) / math.log(256)))
+
+def inverse_log_transformation(pixel_value, c=255):
+    """Inverse log transformation."""
+    return int(c * (math.exp(pixel_value / c) - 1))
+
+def nth_power_transformation(pixel_value, n, c=255):
+    """Nth power transformation."""
+    return int(c * (pixel_value / 255) ** n)
+
+def nth_root_transformation(pixel_value, n, c=255):
+    """Nth root transformation."""
+    return int(c * (pixel_value / 255) ** (1/n))
+
+def transform_image(image, n):
+    transformed_images = {
+        "Identity": image.copy(),
+        "Negative": image.copy(),
+        "Log": image.copy(),
+        "Inverse Log": image.copy(),
+        "Nth Power": image.copy(),
+        "Nth Root": image.copy()
+    }
+
+    width, height = image.size
+    for x in range(width):
+        for y in range(height):
+            pixel_value = image.getpixel((x, y))
+
+            transformed_images["Identity"].putpixel((x, y), linear_identity(pixel_value))
+            transformed_images["Negative"].putpixel((x, y), linear_negative(pixel_value))
+            transformed_images["Log"].putpixel((x, y), log_transformation(pixel_value))
+            transformed_images["Inverse Log"].putpixel((x, y), inverse_log_transformation(pixel_value))
+            transformed_images["Nth Power"].putpixel((x, y), nth_power_transformation(pixel_value, n))
+            transformed_images["Nth Root"].putpixel((x, y), nth_root_transformation(pixel_value, n))
+
+    return transformed_images
+
+# Load the image
+image = Image.open('D:/sem9/cv/sunflower.jpeg').convert("L")
+
+# Transform the image with n=2 for power/root transformations
+n = 2
+transformed_images = transform_image(image, n)
+
+# Display the original and transformed images
+plt.figure(figsize=(12, 8))
+plt.subplot(3, 3, 1)
+plt.title("Original")
+plt.imshow(image, cmap='gray')
+plt.axis('off')
+
+# Iterate and display each transformation
+for i, (title, img) in enumerate(transformed_images.items()):
+    plt.subplot(3, 3, i + 2)
+    plt.title(title)
+    plt.imshow(img, cmap='gray')
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
