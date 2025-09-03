@@ -1,0 +1,54 @@
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load and convert the image to grayscale
+img1 = Image.open('/content/drive/MyDrive/SEM9/Computer Vision/images/images.jpeg').convert("L")
+gray_image = np.array(img)
+
+# Bit-Plane Slicing
+def bit_plane_slicing(image):
+    planes = []
+    for i in range(8):
+        # Isolate each bit plane
+        bit_plane = (image >> i) & 1
+        planes.append(bit_plane * 255)  # Scale the binary plane to 0-255
+    return planes
+
+# Gray-Level Slicing
+def gray_level_slicing(image, low, high):
+    # Create a mask for the specified gray level range
+    mask = (image >= low) & (image <= high)
+    sliced_image = np.zeros_like(image)
+    sliced_image[mask] = 255  # Set the specified range to white
+    return sliced_image
+
+# Perform bit-plane slicing
+bit_planes = bit_plane_slicing(gray_image)
+
+# Perform gray-level slicing (highlighting gray levels between 100 and 150)
+gray_slice = gray_level_slicing(gray_image, 100, 150)
+
+# Display results
+plt.figure(figsize=(12, 10))
+
+# Display Bit-Plane Slices
+plt.subplot(3, 3, 1)
+plt.title("Original Image")
+plt.imshow(gray_image, cmap='gray')
+plt.axis('off')
+
+for i in range(8):
+    plt.subplot(3, 3, i + 2)
+    plt.title(f"Bit Plane {i}")
+    plt.imshow(bit_planes[i], cmap='gray')
+    plt.axis('off')
+
+# Display Gray-Level Slicing
+plt.subplot(3, 3, 9)
+plt.title("Gray-Level Slicing (100-150)")
+plt.imshow(gray_slice, cmap='gray')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
