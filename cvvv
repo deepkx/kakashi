@@ -1,0 +1,10 @@
+binary_thresholding
+connectivity_labelling
+canny
+gray_level_modifications
+gray_scale_conversion
+histogram
+isodata
+otsu
+zoh_foh
+sampling_quantization
