@@ -1,0 +1,21 @@
+# Start with global mean
+threshold = np.mean(img)
+
+while True:
+    # Split pixels
+    lower = img[img <= threshold]
+    upper = img[img > threshold]
+
+    new_thresh = (np.mean(lower) + np.mean(upper)) / 2
+
+    if abs(new_thresh - threshold) < 1:  # convergence
+        break
+    threshold = new_thresh
+
+# Apply threshold
+isodata_binary = (img > threshold).astype(np.uint8) * 255
+
+plt.imshow(isodata_binary, cmap="gray")
+plt.title(f"ISODATA Threshold = {threshold:.2f}")
+plt.axis("off")
+plt.show()
