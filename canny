@@ -1,0 +1,105 @@
+#CANNY
+
+import cv2
+import numpy as np
+
+# Original image
+img = np.array([
+    [10,10,10,10,10],
+    [10,10,50,10,10],
+    [10,50,255,50,10],
+    [10,10,50,10,10],
+    [10,10,10,10,10]
+], dtype=np.float64)
+
+'''image_path = "/content/kitty.avif"
+img_color = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+if img_color is None:
+    raise FileNotFoundError("Image not found. Check the path.")
+
+# Convert to float
+img = img_color.astype(np.float64)'''
+
+# Gaussian blur
+blurred_img = cv2.GaussianBlur(img, (3, 3), 1)
+
+# Sobel kernels
+sobel_x = np.array([[-1,0,1],[-2,0,2],[-1,0,1]], dtype=np.float64)
+sobel_y = np.array([[1,2,1],[0,0,0],[-1,-2,-1]], dtype=np.float64)
+
+def convolve(image, kernel):
+    # Pad image so convolution works on edges
+    pad_h = kernel.shape[0] // 2
+    pad_w = kernel.shape[1] // 2
+    padded = np.pad(image, ((pad_h, pad_h), (pad_w, pad_w)), mode='constant', constant_values=0)
+    output = np.zeros_like(image, dtype=np.float64)
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            region = padded[i:i+kernel.shape[0], j:j+kernel.shape[1]]
+            output[i, j] = np.sum(region * kernel)
+    return output
+
+# Sobel gradients
+img_sobel_x = convolve(blurred_img, sobel_x)
+img_sobel_y = convolve(blurred_img, sobel_y)
+
+print("Sobel X:\n", img_sobel_x)
+print("\nSobel Y:\n", img_sobel_y)
+
+# Magnitude & Orientation
+magnitude_array = np.sqrt(img_sobel_x**2 + img_sobel_y**2)
+orientation_array = (np.arctan2(img_sobel_y, img_sobel_x) * 180 / np.pi) % 180  # normalize
+
+print("\nMagnitude:\n", magnitude_array)
+print("\nOrientation:\n", orientation_array)
+
+# Quantize orientation
+quantized_orientation = np.zeros_like(orientation_array)
+for i in range(orientation_array.shape[0]):
+    for j in range(orientation_array.shape[1]):
+        angle = orientation_array[i][j]
+        if (0 <= angle < 22.5) or (157.5 <= angle < 180):
+            quantized_orientation[i][j] = 0
+        elif 22.5 <= angle < 67.5:
+            quantized_orientation[i][j] = 45
+        elif 67.5 <= angle < 112.5:
+            quantized_orientation[i][j] = 90
+        else:
+            quantized_orientation[i][j] = 135
+
+print("\nQuantized Orientation:\n", quantized_orientation)
+
+# Non-Maximum Suppression
+suppressed = np.zeros_like(magnitude_array)
+rows, cols = magnitude_array.shape
+for i in range(1, rows-1):
+    for j in range(1, cols-1):
+        mag = magnitude_array[i][j]
+        ori = quantized_orientation[i][j]
+        if ori == 0:
+            neighbors = [magnitude_array[i, j-1], magnitude_array[i, j+1]]
+        elif ori == 45:
+            neighbors = [magnitude_array[i-1, j+1], magnitude_array[i+1, j-1]]
+        elif ori == 90:
+            neighbors = [magnitude_array[i-1, j], magnitude_array[i+1, j]]
+        else:  # 135
+            neighbors = [magnitude_array[i-1, j-1], magnitude_array[i+1, j+1]]
+        if mag >= max(neighbors):
+            suppressed[i][j] = mag
+
+print("\nAfter NMS:\n", suppressed)
+
+# Double Threshold
+high_threshold = 150
+low_threshold = 50
+thresholded_matrix = np.zeros_like(suppressed)
+thresholded_matrix[suppressed >= high_threshold] = 1.0
+thresholded_matrix[(suppressed >= low_threshold) & (suppressed < high_threshold)] = 0.5
+
+print("\nDouble Thresholded Matrix:\n", thresholded_matrix)
+
+'''cv2.imshow("Displayed Image", img)'''
+'''cv2.imwrite("/content/blurred.jpg", blurred_img)
+cv2.imwrite("/content/magnitude.jpg", magnitude_array)
+cv2.imwrite("/content/suppressed.jpg", suppressed)
+cv2.imwrite("/content/edges.jpg", (thresholded_matrix * 255).astype(np.uint8))'''
