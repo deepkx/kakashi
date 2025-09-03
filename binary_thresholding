@@ -1,0 +1,31 @@
+import cv2
+import numpy as np
+
+# Example: read in grayscale (float64 for consistency with your case)
+img_color = cv2.imread("D:/sem9/cv/sunflower.jpeg", cv2.IMREAD_GRAYSCALE)
+img = img_color.astype(np.float64)
+
+# Compute mean value of all pixels
+threshold = np.mean(img)
+print("Threshold (mean):", threshold)
+
+# Create an empty matrix for binary result
+binary_img = np.zeros_like(img)
+
+# Iterate and apply threshold
+rows, cols = img.shape
+for r in range(rows):
+    for c in range(cols):
+        if img[r, c] >= threshold:
+            binary_img[r, c] = 1   # pixel >= threshold → white (1)
+        else:
+            binary_img[r, c] = 0   # pixel < threshold → black (0)
+
+# Optionally convert to uint8 for display (0 and 255 instead of 0 and 1)
+binary_display = (binary_img * 255).astype(np.uint8)
+
+# Show result
+cv2.imshow("Original", img_color)
+cv2.imshow("Binary (mean threshold)", binary_display)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
