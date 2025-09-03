@@ -1,0 +1,40 @@
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+img = Image.open('D:/sem9/cv/sunflower.jpeg')
+
+#to display image
+img.show()
+plt.imshow(img)
+plt.axis("off")
+
+#grey scale conversion
+gl = img.convert("L")
+gl.show()
+
+#in array of pixels
+arr = np.array(gl)
+print(arr.shape)
+print(arr)
+
+import cv2
+import matplotlib.pyplot as plt
+
+i = cv2.imread('D:/sem9/cv/sunflower.jpeg')
+rgb = cv2.cvtColor(i, cv2.COLOR_BGR2RGB)
+g = cv2.cvtColor(i, cv2.COLOR_BGR2GRAY)
+
+plt.figure(figsize=(10,5))
+
+plt.subplot(1, 2, 1)
+plt.imshow(rgb)
+plt.title("Original (RGB)")
+plt.axis("off")
+
+plt.subplot(1, 2, 2)
+plt.imshow(g, cmap="gray")
+plt.title("Grayscale")
+plt.axis("off")
+
+plt.show()
