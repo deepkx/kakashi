@@ -1,0 +1,81 @@
+import numpy as np
+from PIL import Image
+import matplotlib as plt
+image_path = 'D:/sem9/cv/image_small.png'
+gray_image = Image.open(image_path).convert("L")
+image = np.array(gray_image)
+
+# Calculate the histogram of the image
+hist, bins = np.histogram(image.flatten(), bins=np.arange(0, 257))
+total_pixels = image.size
+# Calculate probabilities of each gray level
+probabilities = hist / total_pixels
+
+# Initialize variables for the best threshold
+best_thresh = 0
+best_variance = 0
+
+# Iterate through all possible thresholds
+for t in range(1, 256):
+    # Calculate weights of background and foreground pixels
+    weight_bg = np.sum(probabilities[:t])
+    weight_fg = np.sum(probabilities[t:])
+
+    # Calculate means of background and foreground pixels
+    mean_bg = np.sum(probabilities[:t] * np.arange(0, t)) / weight_bg if weight_bg > 0 else 0
+    mean_fg = np.sum(probabilities[t:] * np.arange(t, 256)) / weight_fg if weight_fg > 0 else 0
+
+    # Calculate between-class variance
+    between_class_variance = weight_bg * weight_fg * (mean_bg - mean_fg) ** 2
+
+    # Update best threshold if current variance is higher
+    if between_class_variance > best_variance:
+        best_variance = between_class_variance
+        best_thresh = t
+
+print("Between class variane", best_variance)
+print("Iteration",best_thresh)
+
+# Apply the best threshold
+binary_image = image > best_thresh
+
+print("Original Image:")
+print(image)
+print("\nCalculated Threshold:", best_thresh)
+print("\nBinary Image after Thresholding:")
+print(binary_image)
+
+import matplotlib.pyplot as plt
+
+# Convert boolean mask to uint8 image (0 and 255)
+binary_image_uint8 = (binary_image.astype(np.uint8)) * 255
+
+# Show original and thresholded images
+plt.figure(figsize=(10,5))
+
+plt.subplot(1,2,1)
+plt.title("Original Grayscale")
+plt.imshow(image, cmap="gray")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.title(f"Otsu Thresholding (T={best_thresh})")
+plt.imshow(binary_image_uint8, cmap="gray")
+plt.axis("off")
+
+plt.show()
+
+# Optionally save the binary image
+out_img = Image.fromarray(binary_image_uint8)
+out_img.save("D:/sem9/cv/otsu_result.png")
+
+
+# Plot histogram with threshold
+plt.figure(figsize=(8,4))
+plt.hist(image.flatten(), bins=256, range=(0,256), color='gray', alpha=0.7)
+plt.axvline(best_thresh, color='red', linestyle='--', linewidth=2, label=f"Threshold = {best_thresh}")
+plt.title("Histogram with Otsu Threshold")
+plt.xlabel("Pixel Intensity")
+plt.ylabel("Frequency")
+plt.legend()
+plt.show()
